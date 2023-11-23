@@ -3,19 +3,17 @@ package Modelo;
 import java.util.Date;
 
 public class AlunoM {
-    private int alunoId;
     private String nome;
     private String nomePai;
     private String nomeMae;
     private String rg;
     private String cpf;
-    private Date dataNasc;
+    private String dataNasc;
     private String email;
     private char sexo;
     private String celular;
 
-    public AlunoM(int alunoId, String nome, String nomePai, String nomeMae, String rg, String cpf, Date dataNasc, String email, char sexo, String celular) {
-        this.alunoId = alunoId;
+    public AlunoM( String nome, String nomePai, String nomeMae, String rg, String cpf, String dataNasc, String email, char sexo, String celular) {
         this.nome = nome;
         this.nomePai = nomePai;
         this.nomeMae = nomeMae;
@@ -25,14 +23,6 @@ public class AlunoM {
         this.email = email;
         this.sexo = sexo;
         this.celular = celular;
-    }
-
-    public int getAlunoId() {
-        return alunoId;
-    }
-
-    public void setAlunoId(int alunoId) {
-        this.alunoId = alunoId;
     }
 
     public String getNome() {
@@ -75,11 +65,11 @@ public class AlunoM {
         this.cpf = cpf;
     }
 
-    public Date getDataNasc() {
+    public String getDataNasc() {
         return dataNasc;
     }
 
-    public void setDataNasc(Date dataNasc) {
+    public void setDataNasc(String dataNasc) {
         this.dataNasc = dataNasc;
     }
 

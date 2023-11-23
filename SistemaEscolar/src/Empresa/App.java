@@ -19,6 +19,8 @@ public class App {
 
     CursoM adm = new CursoM(0, null, null, null, 0, 0, 0, null, 0, 0, 0, 0);
 
+    controle.CadastroCurso(adm);
+    
     controle.AtualizaNomeDoCurso(null, 0);
 
     System.out.println("vamos trancar alex!");

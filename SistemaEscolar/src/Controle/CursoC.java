@@ -1,8 +1,10 @@
 package Controle;
+import Modelo.*;
 
 import java.sql.ResultSet;
 
-import Modelo.CursoM;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class CursoC {
@@ -11,12 +13,25 @@ public class CursoC {
     String sql;
     ResultSet dados;
 
-    public void CadastroCurso(CursoM curso){
+
+    public void CadastroCurso(String nomeCurso, String turno, String dataCriacao, int notaMec, int quantSemestres, 
+    int minEducacaoId, String anoAltGrade, int tcc, int creditos, int horasComplementares, int semestres){
+
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        Date data = formatter.parse(dataCriacao);
+       
+       
+        CursoM  a = new CursoM(nomeCurso, turno, data, notaMec, quantSemestres, minEducacaoId, anoAltGrade, tcc, creditos, horasComplementares, semestres);
+        
         
         try {
 
             db.abrirConexao();
             sql="insert into curso values('"+curso.()+"', '"+curso.getNome()+"', '"+curso.getTurno()+"')";
+            sql="INSERT INTO hml.curso
+            (nome_curso, turno, data_criacao, nota_mec, quant_semestres, min_educacao_id, ano_alt_grade, tcc, creditos, horas_complementares, semestres)
+            VALUES('"+a.get+"', '"+curso.getTurno()+"', '"+curso.getNomeCurso()+"', '"+curso.getNomeCurso()+"', '"+curso.getNomeCurso()+"', '"+curso.getNomeCurso()+"', '"+curso.getNomeCurso()+"', '"+curso.getNomeCurso()+"', '"+curso.getNomeCurso()+"', '"+curso.getNomeCurso()+"', '"+curso.getNomeCurso()+"', '"+curso.getNomeCurso()+"');";
             db.getStatement().execute(sql);
             db.fecharConexao();
             

@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS curso (
     nota_mec INTEGER,
     quant_semestres INTEGER,
     min_educacao_id INTEGER,
-    ano_alt_grade DATE,
+    ano_alt_grade varchar(4),
     tcc INT,
     creditos INTEGER,
     horas_complementares INTEGER,
