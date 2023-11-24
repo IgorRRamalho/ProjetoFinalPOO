@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS aluno (
-    aluno_id SERIAL PRIMARY KEY,
+    aluno_id int PRIMARY KEY auto_increment,
     nome VARCHAR(255) NOT NULL,
     nome_pai VARCHAR(255),
     nome_mae VARCHAR(255),
@@ -16,14 +16,16 @@ CREATE TABLE IF NOT EXISTS materias (
     nome_materia VARCHAR(50) NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS grade_escolar (
-    aluno_id SERIAL,
-    materia_id int,
-    FOREIGN KEY (aluno_id) REFERENCES aluno(aluno_id),
-    FOREIGN KEY (materia_id) REFERENCES materias(materia_id)
+CREATE TABLE GradeEscolar (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    aluno_id INT,
+    materia_id INT,
+    FOREIGN KEY (aluno_id) REFERENCES Alunos(aluno_id),
+    FOREIGN KEY (materia_id) REFERENCES Materias(materia_id)
 );
+
 CREATE TABLE IF NOT EXISTS historico (
-    aluno_id serial,
+    aluno_id int,
     materia_id INT, -- Change SERIAL to INT
     Prova1 FLOAT,
     Prova2 FLOAT,
@@ -42,7 +44,7 @@ CREATE TABLE IF NOT EXISTS curso (
     nota_mec INTEGER,
     quant_semestres INTEGER,
     min_educacao_id INTEGER,
-    ano_alt_grade varchar(4),
+    ano_alt_grade DATE,
     tcc INT,
     creditos INTEGER,
     horas_complementares INTEGER,
@@ -50,7 +52,7 @@ CREATE TABLE IF NOT EXISTS curso (
 );
 
 CREATE TABLE IF NOT EXISTS dados_academicos (
-    aluno_id SERIAL,
+    aluno_id int,
     curso_id int,
     PRIMARY KEY (aluno_id, curso_id),
     FOREIGN KEY (aluno_id) REFERENCES aluno(aluno_id),
@@ -66,7 +68,7 @@ CREATE TABLE IF NOT EXISTS materias_curso (
 );
 
 CREATE TABLE IF NOT EXISTS endereco (
-    aluno_id SERIAL PRIMARY KEY,
+    aluno_id int,
     rua VARCHAR(255),
     bairro VARCHAR(255),
     numero INTEGER,
@@ -78,7 +80,7 @@ CREATE TABLE IF NOT EXISTS endereco (
 );
 
 CREATE TABLE IF NOT EXISTS origem (
-    aluno_id SERIAL PRIMARY KEY,
+    aluno_id int,
     historico_em INT,
     reservista INT,
     comp_residencia INT,
@@ -99,7 +101,7 @@ CREATE TABLE IF NOT EXISTS doc_pagamento (
 CREATE TABLE IF NOT EXISTS parcelas (
     parcela_id int PRIMARY KEY,
     doc_id int,
-    aluno_id SERIAL,
+    aluno_id int,
     anomes_parc DATE DEFAULT NULL,
     semestre_parc VARCHAR(5) DEFAULT NULL,
     FOREIGN KEY (aluno_id) REFERENCES aluno(aluno_id),

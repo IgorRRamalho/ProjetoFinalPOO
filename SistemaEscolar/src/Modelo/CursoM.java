@@ -3,22 +3,22 @@ package Modelo;
 import java.util.Date;
 
 public class CursoM {
-    private int cursoId;
+   
     private String nomeCurso;
     private String turno;
-    private Date dataCriacao;
+    private String dataCriacao;
     private int notaMec;
     private int quantSemestres;
     private int minEducacaoId;
-    private Date anoAltGrade;
+    private String anoAltGrade;
     private int tcc;
     private int creditos;
     private int horasComplementares;
     private int semestres;
 
-    public CursoM(int cursoId, String nomeCurso, String turno, Date dataCriacao, int notaMec, int quantSemestres, int minEducacaoId,
-                 Date anoAltGrade, int tcc, int creditos, int horasComplementares, int semestres) {
-        this.cursoId = cursoId;
+    public CursoM(String nomeCurso, String turno, String dataCriacao, int notaMec, int quantSemestres, int minEducacaoId,
+                 String anoAltGrade, int tcc, int creditos, int horasComplementares, int semestres) {
+    
         this.nomeCurso = nomeCurso;
         this.turno = turno;
         this.dataCriacao = dataCriacao;
@@ -32,13 +32,6 @@ public class CursoM {
         this.semestres = semestres;
     }
 
-    public int getCursoId() {
-        return cursoId;
-    }
-
-    public void setCursoId(int cursoId) {
-        this.cursoId = cursoId;
-    }
 
     public String getNomeCurso() {
         return nomeCurso;
@@ -56,11 +49,11 @@ public class CursoM {
         this.turno = turno;
     }
 
-    public Date getDataCriacao() {
+    public String getDataCriacao() {
         return dataCriacao;
     }
 
-    public void setDataCriacao(Date dataCriacao) {
+    public void setDataCriacao(String dataCriacao) {
         this.dataCriacao = dataCriacao;
     }
 
@@ -88,11 +81,11 @@ public class CursoM {
         this.minEducacaoId = minEducacaoId;
     }
 
-    public Date getAnoAltGrade() {
+    public String getAnoAltGrade() {
         return anoAltGrade;
     }
 
-    public void setAnoAltGrade(Date anoAltGrade) {
+    public void setAnoAltGrade(String anoAltGrade) {
         this.anoAltGrade = anoAltGrade;
     }
 
