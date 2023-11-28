@@ -14,10 +14,9 @@ public class CursoM {
     private int tcc;
     private int creditos;
     private int horasComplementares;
-    private int semestres;
 
     public CursoM(String nomeCurso, String turno, String dataCriacao, int notaMec, int quantSemestres, int minEducacaoId,
-                 String anoAltGrade, int tcc, int creditos, int horasComplementares, int semestres) {
+                 String anoAltGrade, int tcc, int creditos, int horasComplementares) {
     
         this.nomeCurso = nomeCurso;
         this.turno = turno;
@@ -29,7 +28,6 @@ public class CursoM {
         this.tcc = tcc;
         this.creditos = creditos;
         this.horasComplementares = horasComplementares;
-        this.semestres = semestres;
     }
 
 
@@ -111,14 +109,6 @@ public class CursoM {
 
     public void setHorasComplementares(int horasComplementares) {
         this.horasComplementares = horasComplementares;
-    }
-
-    public int getSemestres() {
-        return semestres;
-    }
-
-    public void setSemestres(int semestres) {
-        this.semestres = semestres;
     }
     
 

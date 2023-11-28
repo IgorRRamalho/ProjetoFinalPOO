@@ -1,6 +1,7 @@
 package Empresa;
 import Controle.*;
 
+
 import Modelo.*;
 
 
@@ -9,19 +10,19 @@ public class App {
     public static void main(String[] args) throws Exception {
         
       BancoDeDados db = new BancoDeDados();
-      Menus menuu = new Menus();
+
       CursoC controle = new CursoC();
+      Gerenciamento.Curso CursoC = new Gerenciamento().new Curso();
+      Gerenciamento.Aluno AlunoC = new Gerenciamento().new Aluno();
+      Gerenciamento.Materias MateriaC = new Gerenciamento().new Materias();
 
-      db.abrirConexao();
+     /*
+ * // Uso de polimorfismo de tempo de execução
+ * Animal meuAnimal = new Cachorro();
+ * meuAnimal.fazerSom(); // Chama o método fazerSom() de Cachorro
+ */
 
-      menuu.menuInical();
-
-
-    CursoM adm = new CursoM(0, null, null, null, 0, 0, 0, null, 0, 0, 0, 0);
-
-    controle.CadastroCurso(adm);
-    
-    controle.AtualizaNomeDoCurso(null, 0);
+ 
 
     System.out.println("vamos trancar alex!");
     }

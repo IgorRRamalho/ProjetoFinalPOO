@@ -3,27 +3,18 @@ package Modelo;
 import java.util.Date;
 
 public class ParcelasM {
-    private int parcelaId;
     private int docId;
     private int alunoId;
     private Date anomesParc;
     private String semestreParc;
 
-    public ParcelasM(int parcelaId, int docId, int alunoId, Date anomesParc, String semestreParc) {
-        this.parcelaId = parcelaId;
+    public ParcelasM(int docId, int alunoId, Date anomesParc, String semestreParc) {
         this.docId = docId;
         this.alunoId = alunoId;
         this.anomesParc = anomesParc;
         this.semestreParc = semestreParc;
     }
 
-    public int getParcelaId() {
-        return parcelaId;
-    }
-
-    public void setParcelaId(int parcelaId) {
-        this.parcelaId = parcelaId;
-    }
 
     public int getDocId() {
         return docId;
