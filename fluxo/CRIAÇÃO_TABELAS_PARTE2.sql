@@ -8,7 +8,8 @@ CREATE TABLE IF NOT EXISTS aluno (
     data_nasc DATE,
     email VARCHAR(255),
     sexo CHAR(1),
-    celular VARCHAR(15)
+    celular VARCHAR(15),
+    sit_aluno BIT NOT NULL DEFAULT 1
 );
 
 CREATE TABLE IF NOT EXISTS materias (
@@ -20,8 +21,8 @@ CREATE TABLE GradeEscolar (
     id INT PRIMARY KEY AUTO_INCREMENT,
     aluno_id INT,
     materia_id INT,
-    FOREIGN KEY (aluno_id) REFERENCES Alunos(aluno_id),
-    FOREIGN KEY (materia_id) REFERENCES Materias(materia_id)
+    FOREIGN KEY (aluno_id) REFERENCES aluno(aluno_id),
+    FOREIGN KEY (materia_id) REFERENCES materias(materia_id)
 );
 
 CREATE TABLE IF NOT EXISTS historico (
@@ -44,11 +45,11 @@ CREATE TABLE IF NOT EXISTS curso (
     nota_mec INTEGER,
     quant_semestres INTEGER,
     min_educacao_id INTEGER,
-    ano_alt_grade DATE,
-    tcc INT,
+    ano_alt_grade varchar(4),
+    tcc BIT NOT NULL DEFAULT 0,
     creditos INTEGER,
-    horas_complementares INTEGER,
-    semestres INTEGER
+    horas_complementares INTEGER
+    
 );
 
 CREATE TABLE IF NOT EXISTS dados_academicos (
@@ -81,18 +82,18 @@ CREATE TABLE IF NOT EXISTS endereco (
 
 CREATE TABLE IF NOT EXISTS origem (
     aluno_id int,
-    historico_em INT,
-    reservista INT,
-    comp_residencia INT,
+    historico_em BIT NOT NULL DEFAULT 0,
+    reservista BIT NOT NULL DEFAULT 0,
+    comp_residencia BIT NOT NULL DEFAULT 0,
     colegio_antigo VARCHAR(255),
-    eja INT,
-    ensino_tecnico INT,
+    eja BIT NOT NULL DEFAULT 0,
+    ensino_tecnico BIT NOT NULL DEFAULT 0,
     FOREIGN KEY (aluno_id) REFERENCES aluno(aluno_id)
 );
 
 CREATE TABLE IF NOT EXISTS doc_pagamento (
     doc_id int PRIMARY KEY auto_increment,
-    sit_doc INT DEFAULT NULL,
+    sit_doc BIT NOT NULL DEFAULT 0,
     valor DECIMAL(10, 2) DEFAULT NULL,
     emissao DATE DEFAULT NULL,
     vencimento DATE DEFAULT NULL
