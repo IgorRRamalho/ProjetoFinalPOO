@@ -1,7 +1,6 @@
 package Modelo;
 
 public class EnderecoM {
-    private int alunoId;
     private String rua;
     private String bairro;
     private int numero;
@@ -10,8 +9,8 @@ public class EnderecoM {
     private String cidade;
     private String estado;
 
-    public EnderecoM(int alunoId, String rua, String bairro, int numero, String complemento, String cep, String cidade, String estado) {
-        this.alunoId = alunoId;
+    public EnderecoM(String rua, String bairro, int numero, String complemento, String cep, String cidade,
+            String estado) {
         this.rua = rua;
         this.bairro = bairro;
         this.numero = numero;
@@ -19,14 +18,6 @@ public class EnderecoM {
         this.cep = cep;
         this.cidade = cidade;
         this.estado = estado;
-    }
-
-    public int getAlunoId() {
-        return alunoId;
-    }
-
-    public void setAlunoId(int alunoId) {
-        this.alunoId = alunoId;
     }
 
     public String getRua() {
@@ -86,4 +77,3 @@ public class EnderecoM {
     }
 
 }
-

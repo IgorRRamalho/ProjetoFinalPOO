@@ -20,7 +20,7 @@ public class BancoDeDados {
             Class.forName("com.mysql.cj.jdbc.Driver");
             // Estabeleça a conexão com o MySQL
             conect = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/", "root", "*Igor1010*");
+                    "jdbc:mysql://localhost:3306/hml", "root", "*Igor1010*");
             System.out.println("Conectado ao MySQL.");
         } catch (Exception e) {
             System.out.println("Falha ao tentar a conexão");

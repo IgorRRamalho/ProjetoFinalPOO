@@ -1,6 +1,5 @@
 package Modelo;
 
-import java.util.Date;
 
 public class AlunoM {
     private String nome;
@@ -12,8 +11,9 @@ public class AlunoM {
     private String email;
     private char sexo;
     private String celular;
+    private int id_curso;
 
-    public AlunoM( String nome, String nomePai, String nomeMae, String rg, String cpf, String dataNasc, String email, char sexo, String celular) {
+    public AlunoM( String nome, String nomePai, String nomeMae, String rg, String cpf, String dataNasc, String email, char sexo, String celular, int id_curso) {
         this.nome = nome;
         this.nomePai = nomePai;
         this.nomeMae = nomeMae;
@@ -23,6 +23,7 @@ public class AlunoM {
         this.email = email;
         this.sexo = sexo;
         this.celular = celular;
+        this.id_curso = id_curso;
     }
 
     public String getNome() {
@@ -96,7 +97,16 @@ public class AlunoM {
     public void setCelular(String celular) {
         this.celular = celular;
     }
+
+    public int getId_Curso() {
+        return id_curso;
+    }
+
+    public void setId_Curso(int id_curso) {
+        this.id_curso = id_curso;
+    }
     
+
 
     
 }

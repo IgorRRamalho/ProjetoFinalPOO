@@ -1,10 +1,10 @@
 package Modelo;
 
-public class MateriasCursoM {
+public class GradeCursoM {
     private int cursoId;
     private int materiaId;
 
-    public MateriasCursoM(int cursoId, int materiaId) {
+    public GradeCursoM(int cursoId, int materiaId) {
         this.cursoId = cursoId;
         this.materiaId = materiaId;
     }
