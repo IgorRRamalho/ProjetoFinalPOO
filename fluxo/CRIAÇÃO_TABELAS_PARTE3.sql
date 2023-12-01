@@ -48,7 +48,6 @@ CREATE TABLE IF NOT EXISTS curso (
 CREATE TABLE IF NOT EXISTS dados_academicos (
     aluno_id int,
     curso_id int,
-    PRIMARY KEY (aluno_id, curso_id),
     FOREIGN KEY (aluno_id) REFERENCES aluno(aluno_id),
     FOREIGN KEY (curso_id) REFERENCES curso(curso_id)
 );
@@ -56,7 +55,6 @@ CREATE TABLE IF NOT EXISTS dados_academicos (
 CREATE TABLE IF NOT EXISTS grade_curso (
     curso_id int,
     materia_id int,
-    PRIMARY KEY (curso_id, materia_id),
     FOREIGN KEY (curso_id) REFERENCES curso(curso_id),
     FOREIGN KEY (materia_id) REFERENCES materias(materia_id)
 );

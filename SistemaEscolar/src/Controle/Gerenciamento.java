@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import Controle.Gerenciamento.GerenteGeral;
 import Controle.Gerenciamento.GerenteGeral.*;
 import Controle.Gerenciamento.GerenteSQL.*;
 
@@ -28,18 +29,20 @@ public class Gerenciamento {
 
         void Atualizar();
 
+        void Consultar(int idAluno, int idMateria);
+
     }
 
     public interface GerenteSQL<Modelo> extends GerenteGeral {
         void InserirSQL(AlunoM aluno, EnderecoM endereco, int idaluno);
 
-        void RemoverSQL(Modelo objeto);
+        void RemoverSQL(int aluno);
 
         void AtualizarSQL(Modelo objeto, int IDaluno);
 
     }
 
-    public class Curso implements GerenteGeral {
+    public class Curso implements GerenteGeral{
         @Override
         public void Inserir() {
 
@@ -58,91 +61,52 @@ public class Gerenciamento {
             CursoM curso = new CursoM(nomeCurso, turno, dataCriacao, notaMec, quantSemestres, minEducacaoId,
                     anoAltGrade, tcc, creditos, horasComplementares);
 
-            int quant = Input.readInt("Informe a quantidade de matérias existentes no curso:");
-            // INSERT INTO hml.grade_curso (curso_id, materia_id) VALUES(0, 0);
+            InserirSQL(curso);
 
-            for (int i = 0; i > quant; i++) {
+            int quant = Input.readInt("Informe a quantidade de matérias existentes no curso:");
+
+            for (int i = 0; i < quant; i++) {
                 System.out.println("--------------- Cadastro de Matérias no Curso ---------------");
                 int idMateria = Input.readInt("ID Matéria: ");
                 if (util.verificaIDMaterias(idMateria) == 0) {
                     System.out.println("MATÉRIA NÃO EXISTE CARAHO");
+                    i--;
 
                 } else {
+
                     GradeCursoM grade = new GradeCursoM(util.getIDcurso(nomeCurso), idMateria);
 
                     BancoDeDados bancoDeDados = new BancoDeDados();
                     bancoDeDados.abrirConexao();
 
                     try {
-                        String query = "INSERT INTO hml.grade_curso (curso_id, materia_id)"
-                        +" VALUES(?, ?);";
-                                
+                        String query = "INSERT INTO grade_curso (curso_id, materia_id)"
+                                + " VALUES(?, ?);";
 
                         PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-                        preparedStatement.setInt(1, grade.getCursoId());
+                        preparedStatement.setInt(1, util.getIDcurso(nomeCurso));
                         preparedStatement.setInt(2, grade.getMateriaId());
 
-                        // Convert the date to the 'YYYY-MM-DD' format
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                        Date date = dateFormat.parse(curso.getDataCriacao());
-                        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-
-                        preparedStatement.setDate(3, sqlDate);
-                        preparedStatement.setInt(4, curso.getNotaMec());
-                        preparedStatement.setInt(5, curso.getQuantSemestres());
-                        preparedStatement.setInt(6, curso.getMinEducacaoId());
-                        preparedStatement.setString(7, curso.getAnoAltGrade());
-                        preparedStatement.setInt(8, curso.getTcc());
-                        preparedStatement.setInt(9, curso.getCreditos());
-                        preparedStatement.setInt(10, curso.getHorasComplementares());
-
                         preparedStatement.executeUpdate();
-                        bancoDeDados.fecharConexao();
-                        bancoDeDados.abrirConexao();
 
-                    } catch (SQLException | ParseException e) {
+                    } catch (SQLException e) {
                         e.printStackTrace();
                     } finally {
                         bancoDeDados.fecharConexao();
                     }
 
                 }
-
-                // grade_curso
-
             }
 
         }
-
-        @Override
-        public void Remover() {
-            int idCurso = Input.readInt("Digite o ID do curso: ");
-
-        }
-
-        @Override
-        public void Atualizar() {
-            String IDcurso = Input.readString("ID do curso: ");
-            String nomeCurso = Input.readString("Nome do curso: ");
-            String turno = Input.readString("Turno: ");
-            String dataCriacao = Input.readString("Data de criação: ");
-            int notaMec = Input.readInt("Nota MEC: ");
-            int quantSemestres = Input.readInt("Quantidade de Semestres: ");
-            int minEducacaoId = Input.readInt("Identificação no MEC: ");
-            String anoAltGrade = Input.readString("Ano de alteração da grade curricular: ");
-            int tcc = Input.readInt("Possui TCC: ");
-            int creditos = Input.readInt("Quantidade de créditos: ");
-            int horasComplementares = Input.readInt("Quantidade de horas complementares exigidas: ");
-
-        }
-
+      
         public void InserirSQL(CursoM curso) {
             BancoDeDados bancoDeDados = new BancoDeDados();
             bancoDeDados.abrirConexao();
 
             try {
-                String query = "INSERT INTO curso (nomeCurso, turno, dataCriacao, notaMec, quantSemestres, minEducacaoId, anoAltGrade, tcc, creditos, horasComplementares) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                String query = "INSERT INTO hml.curso (nome_curso, turno, data_criacao, nota_mec, quant_semestres, min_educacao_id, ano_alt_grade, tcc, creditos, horas_complementares)"
+                        + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                 PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
                 preparedStatement.setString(1, curso.getNomeCurso());
@@ -172,6 +136,52 @@ public class Gerenciamento {
                 bancoDeDados.fecharConexao();
             }
         }
+
+        @Override
+        public void Remover() {
+
+            int idCurso = Input.readInt("Digite o ID do curso: ");
+
+            RemoverSQL(idCurso);
+
+        }
+
+        public void RemoverSQL(int idCurso) {
+            BancoDeDados bancoDeDados = new BancoDeDados();
+
+            try {
+                String query = "DELETE FROM curso WHERE curso_id = ?";
+                PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
+                preparedStatement.setInt(1, idCurso);
+
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public void Atualizar() {
+            String IDcurso = Input.readString("ID do curso: ");
+            String nomeCurso = Input.readString("Nome do curso: ");
+            String turno = Input.readString("Turno: ");
+            String dataCriacao = Input.readString("Data de criação: ");
+            int notaMec = Input.readInt("Nota MEC: ");
+            int quantSemestres = Input.readInt("Quantidade de Semestres: ");
+            int minEducacaoId = Input.readInt("Identificação no MEC: ");
+            String anoAltGrade = Input.readString("Ano de alteração da grade curricular: ");
+            int tcc = Input.readInt("Possui TCC: ");
+            int creditos = Input.readInt("Quantidade de créditos: ");
+            int horasComplementares = Input.readInt("Quantidade de horas complementares exigidas: ");
+
+        }
+
+        @Override
+        public void Consultar(int idAluno, int idMateria) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'Consultar'");
+        }
+
     }
 
     public class Materias implements GerenteGeral {
@@ -209,12 +219,51 @@ public class Gerenciamento {
         @Override
         public void Remover() {
             int materiaId = Input.readInt("Digite o ID da matéria: ");
+
+            RemoverSQL(materiaId);
+        }
+
+
+        public void RemoverSQL(int materiaId) {
+            BancoDeDados bancoDeDados = new BancoDeDados();
+
+            try {
+                String query = "DELETE FROM curso WHERE materia_id = ?";
+                PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
+                preparedStatement.setInt(1, materiaId);
+
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void Atualizar() {
             int materiaId = Input.readInt("Digite o ID da matéria: ");
             System.out.println("Atualizar matéria: ");
+        }
+
+        @Override
+        public void Consultar(int idAluno, int idMateria) {
+            BancoDeDados bancoDeDados = new BancoDeDados();
+
+            try {
+                String query = "SELECT * FROM historico WHERE aluno_id = ? AND materia_id = ?";
+                PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
+                preparedStatement.setInt(1, idAluno);
+                preparedStatement.setInt(2, idMateria);
+
+                ResultSet resultSet = preparedStatement.executeQuery();
+
+                while (resultSet.next()) {
+                    // Recupere os dados do histórico conforme necessário
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
         }
 
     }
@@ -251,7 +300,7 @@ public class Gerenciamento {
                 String cidade = Input.readString("Cidade: ");
                 String estado = Input.readString("Estado: ");
 
-                AlunoM aluno = new AlunoM(nome, nomePai, nomeMae, rg, cpf, dataNasc, email, sexo, celular, id_curso);
+                AlunoM aluno = new AlunoM(nome, nomePai, nomeMae, rg, cpf, dataNasc, email, sexo, celular);
                 EnderecoM endereco = new EnderecoM(rua, bairro, numero, complemento, cep, cidade, estado);
 
                 InserirSQL(aluno, endereco, id_curso);
@@ -264,8 +313,8 @@ public class Gerenciamento {
             bancoDeDados.abrirConexao();
 
             try {
-                String query = "INSERT INTO aluno (nome, nome_pai, nome_mae, rg, cpf, data_nasc, email, sexo, celular, id_curso) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                String query = "INSERT INTO aluno(nome, nome_pai, nome_mae, rg, cpf, data_nasc, email, sexo, celular)"
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
                 preparedStatement.setString(1, aluno.getNome());
                 preparedStatement.setString(2, aluno.getNomePai());
@@ -282,13 +331,12 @@ public class Gerenciamento {
                 preparedStatement.setString(7, aluno.getEmail());
                 preparedStatement.setString(8, String.valueOf(aluno.getSexo()));
                 preparedStatement.setString(9, aluno.getCelular());
-                preparedStatement.setInt(10, aluno.getId_Curso());
 
                 preparedStatement.executeUpdate();
                 bancoDeDados.fecharConexao();
                 bancoDeDados.abrirConexao();
 
-                query = "INSERT INTO hml.endereco (aluno_id, rua, bairro, numero, complemento, cep, cidade, estado) "
+                query = "INSERT INTO endereco (aluno_id, rua, bairro, numero, complemento, cep, cidade, estado) "
                         + "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
                 preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
 
@@ -306,13 +354,20 @@ public class Gerenciamento {
                 bancoDeDados.fecharConexao();
                 bancoDeDados.abrirConexao();
 
-                query = "INSERT INTO hml.dados_academicos (aluno_id, curso_id) "
+                query = "INSERT INTO dados_academicos(aluno_id, curso_id)"
                         + "VALUES(?, ?);";
                 preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
 
-                preparedStatement.setInt(1, util.getIDaluno(aluno.getCpf()));
+                preparedStatement.setInt(1, 1);
                 preparedStatement.setInt(2, id_curso);
                 preparedStatement.executeUpdate();
+
+                bancoDeDados.fecharConexao();
+                bancoDeDados.abrirConexao();
+                query = "CALL inserir_historico(?);";
+
+                preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
+                preparedStatement.setInt(1, util.getIDaluno(aluno.getCpf()));
             } catch (SQLException | ParseException e) {
                 e.printStackTrace();
             } finally {
@@ -324,14 +379,15 @@ public class Gerenciamento {
         @Override
         public void Remover() {
             int idAluno = Input.readInt("Digite o ID do aluno:");
+
         }
 
-        public void RemoverSQL(AlunoM aluno) {
+        public void RemoverSQL(int idaluno) {
             BancoDeDados bancoDeDados = new BancoDeDados();
             try {
-                String query = "DELETE FROM aluno WHERE cpf = ?";
+                String query = "UPDATE aluno SET sit_aluno=b'0' WHERE aluno_id=?;";
                 PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-                preparedStatement.setString(1, aluno.getCpf());
+                preparedStatement.setInt(1, idaluno);
 
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
@@ -384,6 +440,12 @@ public class Gerenciamento {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+
+        @Override
+        public void Consultar(int idAluno, int idMateria) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'Consultar'");
         }
     }
 }

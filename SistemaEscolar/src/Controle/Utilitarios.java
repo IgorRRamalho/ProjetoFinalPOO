@@ -20,7 +20,7 @@ public class Utilitarios {
         int idaluno = 0;
 
         try {
-            String query = "SELECT a.aluno_id FROM aluno a WHERE a.cpf = ?";
+            String query = "SELECT aluno_id FROM aluno WHERE cpf = ?";
             PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
             preparedStatement.setString(1, palavra);
 
@@ -46,7 +46,7 @@ public class Utilitarios {
         int cursoid = 0;
 
         try {
-            String query = "SELECT a.curso_id FROM curso a WHERE a.nome_curso = ?";
+            String query = "SELECT curso_id FROM hml.curso WHERE nome_curso = ?";
             PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
             preparedStatement.setString(1, palavra);
 
@@ -73,7 +73,7 @@ public class Utilitarios {
         int resul = 0;
 
         try {
-            String query = "SELECT 1 FROM curso WHERE id_curso = ?";
+            String query = "SELECT 1 FROM curso WHERE curso_id = ?";
             PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
             preparedStatement.setInt(1, idcurso);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
