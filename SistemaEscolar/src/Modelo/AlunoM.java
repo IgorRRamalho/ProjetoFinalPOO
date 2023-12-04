@@ -1,7 +1,7 @@
 package Modelo;
 
 
-public class AlunoM {
+public class AlunoM extends EnderecoM{
     private String nome;
     private String nomePai;
     private String nomeMae;
@@ -11,8 +11,15 @@ public class AlunoM {
     private String email;
     private char sexo;
     private String celular;
+    private int IDcurso;
 
-    public AlunoM( String nome, String nomePai, String nomeMae, String rg, String cpf, String dataNasc, String email, char sexo, String celular) {
+    
+  
+
+    public AlunoM(String rua, String bairro, int numero, String complemento, String cep, String cidade, String estado,
+            String nome, String nomePai, String nomeMae, String rg, String cpf, String dataNasc, String email,
+            char sexo, String celular, int iDcurso) {
+        super(rua, bairro, numero, complemento, cep, cidade, estado);
         this.nome = nome;
         this.nomePai = nomePai;
         this.nomeMae = nomeMae;
@@ -22,6 +29,7 @@ public class AlunoM {
         this.email = email;
         this.sexo = sexo;
         this.celular = celular;
+        IDcurso = iDcurso;
     }
 
     public String getNome() {
@@ -94,6 +102,14 @@ public class AlunoM {
 
     public void setCelular(String celular) {
         this.celular = celular;
+    }
+
+    public int getIDcurso() {
+        return IDcurso;
+    }
+
+    public void setIDcurso(int iDcurso) {
+        IDcurso = iDcurso;
     }
 
 

@@ -1,7 +1,7 @@
 package Empresa;
 
 import Controle.*;
-import Controle.Gerenciamento.Curso;
+import Controle.GerenteGeral.Curso;
 import Modelo.*;
 
 public class App {
@@ -10,9 +10,9 @@ public class App {
         BancoDeDados db = new BancoDeDados();
 
         Utilitarios util = new Utilitarios();
-        Gerenciamento.Aluno AlunoC = new Gerenciamento().new Aluno();
-        Gerenciamento.Curso CursoC = new Gerenciamento().new Curso();
-        Gerenciamento.Materias MateriasC = new Gerenciamento().new Materias();
+        GerenteGeral.Aluno AlunoC = new GerenteGeral().new Aluno();
+        GerenteGeral.Curso CursoC = new GerenteGeral().new Curso();
+        GerenteGeral.Materias MateriasC = new GerenteGeral().new Materias();
 
         // int idaluno = util.getIDaluno("07341691166");
 

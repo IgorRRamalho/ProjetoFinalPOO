@@ -1,6 +1,6 @@
 package Modelo;
 
-public class EnderecoM {
+public class EnderecoM{
     private String rua;
     private String bairro;
     private int numero;
@@ -8,6 +8,10 @@ public class EnderecoM {
     private String cep;
     private String cidade;
     private String estado;
+
+   
+   
+
 
     public EnderecoM(String rua, String bairro, int numero, String complemento, String cep, String cidade,
             String estado) {
