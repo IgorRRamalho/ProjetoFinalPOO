@@ -20,7 +20,7 @@ public class Gerenciamento {
     Curso CursoC = new Curso();
     Aluno AlunoC = new Aluno();
 
-    Utilitarios util = new Utilitarios();
+    public Utilitarios util = new Utilitarios();
 
     public interface GerenteGeral {
         void Inserir();
@@ -266,9 +266,11 @@ public class Gerenciamento {
 
         }
 
-    }
+    
 
     public class Aluno implements GerenteGeral {
+
+        Utilitarios util = new Utilitarios();
         @Override
         public void Inserir() {
 
@@ -287,7 +289,7 @@ public class Gerenciamento {
             if (util.verificaIDcurso(id_curso) == 0) {
                 System.out.println("NÃO EXISTE");
             } else {
-
+                
                 util.limparTelaConsole();
 
                 System.out.print("##----------- Endereço -----------##\n");
