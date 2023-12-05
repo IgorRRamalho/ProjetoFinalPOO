@@ -10,23 +10,8 @@ public class App {
         BancoDeDados db = new BancoDeDados();
 
         Utilitarios util = new Utilitarios();
-        GerenteGeral.Aluno AlunoC = new GerenteGeral().new Aluno();
-        GerenteGeral.Curso CursoC = new GerenteGeral().new Curso();
-        GerenteGeral.Materias MateriasC = new GerenteGeral().new Materias();
-
-        // int idaluno = util.getIDaluno("07341691166");
-
-        // System.out.println(idaluno);
-
-        MateriasC.Inserir();
-        CursoC.Inserir();
-        AlunoC.Inserir();
-
-        /*
-         * Uso de polimorfismo de tempo de execução
-         * Animal meuAnimal = new Cachorro();
-         * meuAnimal.fazerSom(); // Chama o método fazerSom() de Cachorro
-         */
+        GerenteGeral gerenteCurso= new GerenteGeral.Curso();
+        gerenteCurso.Consultar();
 
         System.out.println("vamos trancar alex!");
     }

@@ -27,6 +27,7 @@ public interface GerenteSQL<Modelo> {
     Curso CursoC = new Curso();
     Aluno AlunoC = new Aluno();
     Utilitarios util = new Utilitarios();
+    ConsultasC ConsultaC = new ConsultasC();
 
     public class Curso implements GerenteSQL<CursoM> {
 
@@ -71,15 +72,18 @@ public interface GerenteSQL<Modelo> {
         @Override
         public void RemoverSQL(int idCurso) {
             BancoDeDados bancoDeDados = new BancoDeDados();
+            bancoDeDados.abrirConexao();
 
             try {
-                String query = "DELETE FROM curso WHERE curso_id = ?";
+                String query = "AQUI VAI CHAMAR A PROCEURE DE DELETAR CURSO";
                 PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
                 preparedStatement.setInt(1, idCurso);
 
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
+            }finally{
+                bancoDeDados.fecharConexao();
             }
         }
 
@@ -92,24 +96,32 @@ public interface GerenteSQL<Modelo> {
         @Override
         public ResultSet ConsultarSQL(int idCurso) {
             BancoDeDados bancoDeDados = new BancoDeDados();
+            bancoDeDados.abrirConexao();
+            ResultSet resultSet = null;
             try {
-                String query = "SELECT * FROM grade_curso WHERE curso_id = ? AND materia_id = ?";
+                String query = "select\r\n" + //
+                        "\tc.*,\r\n" + //
+                        "\tGROUP_CONCAT(m.nome_materia order by m.nome_materia separator ' | ') as materias_do_curso\r\n"
+                        + //
+                        "from\r\n" + //
+                        "\thml.curso c\r\n" + //
+                        "left join hml.grade_curso gc on\r\n" + //
+                        "\tgc.curso_id = c.curso_id\r\n" + //
+                        "left join hml.materias m on\r\n" + //
+                        "\tm.materia_id = gc.materia_id\r\n" + //
+                        "where\r\n" + //
+                        "\tc.curso_id = ?\r\n" + //
+                        "group by\r\n" + //
+                        "\tc.curso_id;";
                 PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
                 preparedStatement.setInt(1, idCurso);
-             
 
-                ResultSet resultSet = preparedStatement.executeQuery();
+                resultSet = preparedStatement.executeQuery();
 
-                while (resultSet.next()) {
-                    // Aqui você pode recuperar e exibir os dados da grade_curso conforme
-                    // necessário.
-                    int cursoId = resultSet.getInt("curso_id");
-                    int materiaId = resultSet.getInt("materia_id");
-
-                    System.out.println("Curso ID: " + cursoId + ", Matéria ID: " + materiaId);
-                }
             } catch (SQLException e) {
                 e.printStackTrace();
+            } finally {
+                return resultSet;
             }
         }
 
@@ -157,6 +169,12 @@ public interface GerenteSQL<Modelo> {
         public void AtualizarSQL(MateriasM objeto, int IDaluno) {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'AtualizarSQL'");
+        }
+
+        @Override
+        public ResultSet ConsultarSQL(int ID) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'ConsultarSQL'");
         }
 
     }
@@ -269,6 +287,12 @@ public interface GerenteSQL<Modelo> {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+
+        @Override
+        public ResultSet ConsultarSQL(int ID) {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'ConsultarSQL'");
         }
 
     }

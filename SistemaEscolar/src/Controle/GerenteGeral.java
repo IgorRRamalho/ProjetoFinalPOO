@@ -18,11 +18,12 @@ public interface GerenteGeral {
 
     void Atualizar();
 
-    void Consultar(int idAluno, int idMateria);
+    void Consultar() throws SQLException, ParseException;
 
     Materias MateriasC = new Materias();
     Curso CursoC = new Curso();
     Aluno AlunoC = new Aluno();
+    GerenteSQL<CursoM> gerenteCurso = new GerenteSQL.Curso();
 
     public Utilitarios util = new Utilitarios();
 
@@ -45,7 +46,7 @@ public interface GerenteGeral {
             CursoM curso = new CursoM(nomeCurso, turno, dataCriacao, notaMec, quantSemestres, minEducacaoId,
                     anoAltGrade, tcc, creditos, horasComplementares);
 
-            //InserirSQL(curso);
+            // InserirSQL(curso);
 
             int quant = Input.readInt("Informe a quantidade de matérias existentes no curso:");
 
@@ -89,7 +90,7 @@ public interface GerenteGeral {
 
             int idCurso = Input.readInt("Digite o ID do curso: ");
 
-            //RemoverSQL(idCurso);
+            // RemoverSQL(idCurso);
 
         }
 
@@ -106,16 +107,22 @@ public interface GerenteGeral {
             int tcc = Input.readInt("Possui TCC (1 para Sim, 0 para Não): ");
             int creditos = Input.readInt("Nova quantidade de créditos: ");
             int horasComplementares = Input.readInt("Nova quantidade de horas complementares exigidas: ");
-        
-            // Agora, você precisa implementar o código para realizar a atualização no banco de dados.
-            // Utilize uma instrução UPDATE no SQL para alterar os dados do curso com base no ID do curso.
+
+            // Agora, você precisa implementar o código para realizar a atualização no banco
+            // de dados.
+            // Utilize uma instrução UPDATE no SQL para alterar os dados do curso com base
+            // no ID do curso.
             // Exemplo:
-            // UPDATE curso SET nome_curso=?, turno=?, data_criacao=?, nota_mec=?, quant_semestres=?, ...
+            // UPDATE curso SET nome_curso=?, turno=?, data_criacao=?, nota_mec=?,
+            // quant_semestres=?, ...
         }
 
         @Override
-        public void Consultar(int idAluno, int idMateria) {
-            
+        public void Consultar() throws SQLException, ParseException {
+            int idcurso = Input.readInt("DIGITE O ID DO CURSO:");
+            ConsultasC menuConsulta = new ConsultasC();
+            menuConsulta.ConsultaCursoPorID(gerenteCurso.ConsultarSQL(idcurso));
+
         }
 
     }
@@ -143,22 +150,24 @@ public interface GerenteGeral {
         public void Atualizar() {
             int idMateria = Input.readInt("ID da matéria: ");
             String novoNomeMateria = Input.readString("Novo nome da matéria: ");
-        
-            // Agora, você precisa implementar o código para realizar a atualização no banco de dados.
-            // Utilize uma instrução UPDATE no SQL para alterar o nome da matéria com base no ID da matéria.
+
+            // Agora, você precisa implementar o código para realizar a atualização no banco
+            // de dados.
+            // Utilize uma instrução UPDATE no SQL para alterar o nome da matéria com base
+            // no ID da matéria.
             // Exemplo:
             // UPDATE materias SET nome_materia=? WHERE materia_id=?
         }
 
         @Override
-        public void Consultar(int idAluno, int idMateria) {
+        public void Consultar() throws SQLException {
             BancoDeDados bancoDeDados = new BancoDeDados();
 
             try {
                 String query = "SELECT * FROM historico WHERE aluno_id = ? AND materia_id = ?";
                 PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-                preparedStatement.setInt(1, idAluno);
-                preparedStatement.setInt(2, idMateria);
+                // preparedStatement.setInt(1, idAluno);
+                // preparedStatement.setInt(2, idMateria);
 
                 ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -219,7 +228,6 @@ public interface GerenteGeral {
 
         }
 
-
         @Override
         public void Atualizar() {
             int idAluno = Input.readInt("ID do aluno: ");
@@ -232,16 +240,20 @@ public interface GerenteGeral {
             String novoEmail = Input.readString("Novo E-mail: ");
             char novoSexo = Input.readChar("Novo Sexo: ");
             String novoCelular = Input.readString("Novo Celular: ");
-        
-            // Agora, você precisa implementar o código para realizar a atualização no banco de dados.
-            // Utilize uma instrução UPDATE no SQL para alterar os dados do aluno com base no ID do aluno.
+
+            // Agora, você precisa implementar o código para realizar a atualização no banco
+            // de dados.
+            // Utilize uma instrução UPDATE no SQL para alterar os dados do aluno com base
+            // no ID do aluno.
             // Exemplo:
-            // UPDATE aluno SET nome=?, nome_pai=?, nome_mae=?, rg=?, cpf=?, data_nasc=?, ...
+            // UPDATE aluno SET nome=?, nome_pai=?, nome_mae=?, rg=?, cpf=?, data_nasc=?,
+            // ...
         }
 
         @Override
-        public void Consultar(int idAluno, int idMateria) {
-            
+        public void Consultar() throws SQLException {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("Unimplemented method 'Consultar'");
         }
 
     }
