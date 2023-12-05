@@ -16,8 +16,6 @@ public interface GerenteGeral {
 
     void Remover();
 
-    void Atualizar();
-
     void Consultar() throws SQLException, ParseException;
 
     Materias MateriasC = new Materias();
@@ -95,29 +93,6 @@ public interface GerenteGeral {
         }
 
         @Override
-        public void Atualizar() {
-            int idCurso = Input.readInt("ID do curso: ");
-            String nomeCurso = Input.readString("Novo nome do curso: ");
-            String turno = Input.readString("Novo turno: ");
-            String dataCriacao = Input.readString("Nova data de criação: ");
-            int notaMec = Input.readInt("Nova Nota MEC: ");
-            int quantSemestres = Input.readInt("Nova quantidade de Semestres: ");
-            int minEducacaoId = Input.readInt("Nova identificação no MEC: ");
-            String anoAltGrade = Input.readString("Novo ano de alteração da grade curricular: ");
-            int tcc = Input.readInt("Possui TCC (1 para Sim, 0 para Não): ");
-            int creditos = Input.readInt("Nova quantidade de créditos: ");
-            int horasComplementares = Input.readInt("Nova quantidade de horas complementares exigidas: ");
-
-            // Agora, você precisa implementar o código para realizar a atualização no banco
-            // de dados.
-            // Utilize uma instrução UPDATE no SQL para alterar os dados do curso com base
-            // no ID do curso.
-            // Exemplo:
-            // UPDATE curso SET nome_curso=?, turno=?, data_criacao=?, nota_mec=?,
-            // quant_semestres=?, ...
-        }
-
-        @Override
         public void Consultar() throws SQLException, ParseException {
             int idcurso = Input.readInt("DIGITE O ID DO CURSO:");
             ConsultasC menuConsulta = new ConsultasC();
@@ -146,18 +121,7 @@ public interface GerenteGeral {
             // RemoverSQL(materiaId);
         }
 
-        @Override
-        public void Atualizar() {
-            int idMateria = Input.readInt("ID da matéria: ");
-            String novoNomeMateria = Input.readString("Novo nome da matéria: ");
 
-            // Agora, você precisa implementar o código para realizar a atualização no banco
-            // de dados.
-            // Utilize uma instrução UPDATE no SQL para alterar o nome da matéria com base
-            // no ID da matéria.
-            // Exemplo:
-            // UPDATE materias SET nome_materia=? WHERE materia_id=?
-        }
 
         @Override
         public void Consultar() throws SQLException {
@@ -227,28 +191,7 @@ public interface GerenteGeral {
             int idAluno = Input.readInt("Digite o ID do aluno:");
 
         }
-
-        @Override
-        public void Atualizar() {
-            int idAluno = Input.readInt("ID do aluno: ");
-            String novoNome = Input.readString("Novo nome do aluno: ");
-            String novoNomePai = Input.readString("Novo nome do Pai: ");
-            String novoNomeMae = Input.readString("Novo nome da Mãe: ");
-            String novoRg = Input.readString("Novo RG: ");
-            String novoCpf = Input.readString("Novo CPF: ");
-            String novaDataNasc = Input.readString("Nova data de Nascimento: ");
-            String novoEmail = Input.readString("Novo E-mail: ");
-            char novoSexo = Input.readChar("Novo Sexo: ");
-            String novoCelular = Input.readString("Novo Celular: ");
-
-            // Agora, você precisa implementar o código para realizar a atualização no banco
-            // de dados.
-            // Utilize uma instrução UPDATE no SQL para alterar os dados do aluno com base
-            // no ID do aluno.
-            // Exemplo:
-            // UPDATE aluno SET nome=?, nome_pai=?, nome_mae=?, rg=?, cpf=?, data_nasc=?,
-            // ...
-        }
+       
 
         @Override
         public void Consultar() throws SQLException {

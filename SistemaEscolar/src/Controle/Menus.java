@@ -1,9 +1,11 @@
 package Controle;
+
 import java.util.Scanner;
 
 public class Menus {
     Scanner leitor = new Scanner(System.in);
     Utilitarios util = new Utilitarios();
+
     public void menuInical() {
         System.out.print("##--Menu Inicial--##\n\n");
         System.out.print("|-------------------------------|\n");
@@ -28,7 +30,7 @@ public class Menus {
             case 3:
                 menuMateria();
                 break;
-            case 4: 
+            case 4:
                 menuInical();
                 break;
             default:
@@ -36,7 +38,7 @@ public class Menus {
         }
     }
 
-    public void menuAluno(){
+    public void menuAluno() {
         System.out.print("##--Menu Aluno--##\n\n");
         System.out.print("|-------------------------------|\n");
         System.out.print("| Opção 1 - Adiconar Aluno      |\n");
@@ -51,19 +53,20 @@ public class Menus {
 
         switch (opcao) {
             case 1:
-                //adicionaAluno();
+                // adicionaAluno();
                 break;
             case 2:
-                //removeAluno();
+                // removeAluno();
                 break;
             case 3:
-                //alteraAluno();
+                // alteraAluno();
                 break;
             default:
                 break;
         }
     }
-    public void menuCurso(){
+
+    public void menuCurso() {
         System.out.print("##--Menu Curso--##\n\n");
         System.out.print("|-------------------------------|\n");
         System.out.print("| Opção 1 - Adiconar Curso      |\n");
@@ -79,22 +82,23 @@ public class Menus {
 
         switch (opcao) {
             case 1:
-                //adicionaCurso();
+                // adicionaCurso();
                 break;
             case 2:
-                //removeCurso();
+                // removeCurso();
                 break;
             case 3:
-                //alteraCurso();
+                // alteraCurso();
                 break;
-            case 4: 
+            case 4:
                 menuInical();
                 break;
             default:
                 break;
         }
     }
-    public void menuMateria(){
+
+    public void menuMateria() {
         System.out.print("##--Menu Materia--##\n\n");
         System.out.print("|-------------------------------|\n");
         System.out.print("| Opção 1 - Adiconar Materia    |\n");
@@ -110,15 +114,15 @@ public class Menus {
 
         switch (opcao) {
             case 1:
-                //adicionaMateria();
+                // adicionaMateria();
                 break;
             case 2:
-                //removeMateria();
+                // removeMateria();
                 break;
             case 3:
-                //alteraMateria();
+                // alteraMateria();
                 break;
-            case 4: 
+            case 4:
                 menuInical();
                 break;
             default:

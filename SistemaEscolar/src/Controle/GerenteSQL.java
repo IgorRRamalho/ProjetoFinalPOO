@@ -19,8 +19,6 @@ public interface GerenteSQL<Modelo> {
 
     void RemoverSQL(int ID);
 
-    void AtualizarSQL(Modelo objeto, int IDaluno);
-
     ResultSet ConsultarSQL(int ID);
 
     Materias MateriasC = new Materias();
@@ -87,11 +85,7 @@ public interface GerenteSQL<Modelo> {
             }
         }
 
-        @Override
-        public void AtualizarSQL(CursoM objeto, int IDaluno) {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'AtualizarSQL'");
-        }
+      
 
         @Override
         public ResultSet ConsultarSQL(int idCurso) {
@@ -165,11 +159,7 @@ public interface GerenteSQL<Modelo> {
             }
         }
 
-        @Override
-        public void AtualizarSQL(MateriasM objeto, int IDaluno) {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'AtualizarSQL'");
-        }
+      
 
         @Override
         public ResultSet ConsultarSQL(int ID) {
@@ -257,31 +247,6 @@ public interface GerenteSQL<Modelo> {
                 String query = "UPDATE aluno SET sit_aluno=b'0' WHERE aluno_id=?;";
                 PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
                 preparedStatement.setInt(1, idaluno);
-
-                preparedStatement.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public void AtualizarSQL(AlunoM aluno, int IDaluno) {
-            BancoDeDados bancoDeDados = new BancoDeDados();
-
-            try {
-                String query = "UPDATE aluno SET nome = ?, nome_pai = ?, nome_mae = ?, rg = ?, cpf = ?, " +
-                        "data_nasc = ?, email = ?, sexo = ?, celular = ? WHERE aluno_id = ?";
-                PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-                preparedStatement.setString(1, aluno.getNome());
-                preparedStatement.setString(2, aluno.getNomePai());
-                preparedStatement.setString(3, aluno.getNomeMae());
-                preparedStatement.setString(4, aluno.getRg());
-                preparedStatement.setString(5, aluno.getCpf());
-                preparedStatement.setString(6, aluno.getDataNasc());
-                preparedStatement.setString(7, aluno.getEmail());
-                preparedStatement.setString(8, String.valueOf(aluno.getSexo()));
-                preparedStatement.setString(9, aluno.getCelular());
-                preparedStatement.setInt(10, IDaluno);
 
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
