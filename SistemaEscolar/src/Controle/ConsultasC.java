@@ -19,6 +19,9 @@ public class ConsultasC {
     private int tcc;
     private int creditos;
     private int horasComplementares;
+
+    private String nomeMateria;
+    
     BancoDeDados bancoDeDados = new BancoDeDados();
 
     void ConsultaCursoPorID(ResultSet base) throws SQLException, ParseException {
@@ -54,7 +57,22 @@ public class ConsultasC {
             bancoDeDados.fecharConexao();
 
         } else {
-            System.out.println("No rows found in the ResultSet.");
+            System.out.println("Não foram encontrados cursos com esse ID");
+        }
+    }
+
+    void ConsultaMateria(ResultSet base) throws SQLException, ParseException {
+        System.out.println("============== Curso ==============");
+        if (base.next()) { // Move the cursor to the first row
+
+            String nomeMateria = base.getString(1);
+
+            System.out.println("ID da Materia: " + idMateria);
+            System.out.println("Nome da Materia: " + nomeMateria);
+            bancoDeDados.fecharConexao();
+
+        } else {
+            System.out.println("Não foram encontradas matérias com este nome.");
         }
     }
 }

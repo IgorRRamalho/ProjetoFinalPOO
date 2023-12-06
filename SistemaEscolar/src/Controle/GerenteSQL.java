@@ -15,7 +15,7 @@ import Modelo.EnderecoM;
 import Modelo.MateriasM;
 
 public interface GerenteSQL<Modelo> {
-    void InserirSQL(Modelo objeto);
+    void InserirSQL(Modelo objeto, int id_curso);
 
     void RemoverSQL(int ID);
 
@@ -30,7 +30,7 @@ public interface GerenteSQL<Modelo> {
     public class Curso implements GerenteSQL<CursoM> {
 
         @Override
-        public void InserirSQL(CursoM curso) {
+        public void InserirSQL(CursoM curso, int a) {
             BancoDeDados bancoDeDados = new BancoDeDados();
             bancoDeDados.abrirConexao();
 
@@ -73,19 +73,17 @@ public interface GerenteSQL<Modelo> {
             bancoDeDados.abrirConexao();
 
             try {
-                String query = "AQUI VAI CHAMAR A PROCEURE DE DELETAR CURSO";
+                String query = "CALL ExcluirCurso(?);";
                 PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
                 preparedStatement.setInt(1, idCurso);
 
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
-            }finally{
+            } finally {
                 bancoDeDados.fecharConexao();
             }
         }
-
-      
 
         @Override
         public ResultSet ConsultarSQL(int idCurso) {
@@ -93,20 +91,7 @@ public interface GerenteSQL<Modelo> {
             bancoDeDados.abrirConexao();
             ResultSet resultSet = null;
             try {
-                String query = "select\r\n" + //
-                        "\tc.*,\r\n" + //
-                        "\tGROUP_CONCAT(m.nome_materia order by m.nome_materia separator ' | ') as materias_do_curso\r\n"
-                        + //
-                        "from\r\n" + //
-                        "\thml.curso c\r\n" + //
-                        "left join hml.grade_curso gc on\r\n" + //
-                        "\tgc.curso_id = c.curso_id\r\n" + //
-                        "left join hml.materias m on\r\n" + //
-                        "\tm.materia_id = gc.materia_id\r\n" + //
-                        "where\r\n" + //
-                        "\tc.curso_id = ?\r\n" + //
-                        "group by\r\n" + //
-                        "\tc.curso_id;";
+                String query = "";
                 PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
                 preparedStatement.setInt(1, idCurso);
 
@@ -124,7 +109,7 @@ public interface GerenteSQL<Modelo> {
     public class Materias implements GerenteSQL<MateriasM> {
 
         @Override
-        public void InserirSQL(MateriasM materia) {
+        public void InserirSQL(MateriasM materia, int a) {
             BancoDeDados bancoDeDados = new BancoDeDados();
             bancoDeDados.abrirConexao();
 
@@ -149,7 +134,7 @@ public interface GerenteSQL<Modelo> {
             BancoDeDados bancoDeDados = new BancoDeDados();
 
             try {
-                String query = "DELETE FROM curso WHERE materia_id = ?";
+                String query = "CALL ExcluirDisciplina(?);";
                 PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
                 preparedStatement.setInt(1, materiaId);
 
@@ -158,8 +143,6 @@ public interface GerenteSQL<Modelo> {
                 e.printStackTrace();
             }
         }
-
-      
 
         @Override
         public ResultSet ConsultarSQL(int ID) {
@@ -172,13 +155,13 @@ public interface GerenteSQL<Modelo> {
     public class Aluno implements GerenteSQL<AlunoM> {
 
         @Override
-        public void InserirSQL(AlunoM aluno) {
+        public void InserirSQL(AlunoM aluno, int idcurso) {
             BancoDeDados bancoDeDados = new BancoDeDados();
             bancoDeDados.abrirConexao();
 
             try {
-                String query = "INSERT INTO aluno(nome, nome_pai, nome_mae, rg, cpf, data_nasc, email, sexo, celular)"
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                String query = " CALL hml.cadastrar_aluno(? , ? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? , ?, @aluno_id_out) ";
+
                 PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
                 preparedStatement.setString(1, aluno.getNome());
                 preparedStatement.setString(2, aluno.getNomePai());
@@ -196,42 +179,16 @@ public interface GerenteSQL<Modelo> {
                 preparedStatement.setString(8, String.valueOf(aluno.getSexo()));
                 preparedStatement.setString(9, aluno.getCelular());
 
-                preparedStatement.executeUpdate();
-                bancoDeDados.fecharConexao();
-                bancoDeDados.abrirConexao();
-
-                query = "INSERT INTO endereco (aluno_id, rua, bairro, numero, complemento, cep, cidade, estado) "
-                        + "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-                preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-
-                preparedStatement.setInt(1, util.getIDaluno(aluno.getCpf()));
-                preparedStatement.setString(2, aluno.getRua());
-                preparedStatement.setString(3, aluno.getBairro());
-                preparedStatement.setInt(4, aluno.getNumero());
-                preparedStatement.setString(5, aluno.getComplemento());
-                preparedStatement.setString(6, aluno.getCep());
-                preparedStatement.setString(7, aluno.getCidade());
-                preparedStatement.setString(8, aluno.getEstado());
-
+                preparedStatement.setString(10, aluno.getRua());
+                preparedStatement.setString(11, aluno.getBairro());
+                preparedStatement.setInt(12, aluno.getNumero());
+                preparedStatement.setString(13, aluno.getComplemento());
+                preparedStatement.setString(14, aluno.getCep());
+                preparedStatement.setString(15, aluno.getCidade());
+                preparedStatement.setString(16, aluno.getEstado());
+                preparedStatement.setInt(17, idcurso);
                 preparedStatement.executeUpdate();
 
-                bancoDeDados.fecharConexao();
-                bancoDeDados.abrirConexao();
-
-                query = "INSERT INTO dados_academicos(aluno_id, curso_id)"
-                        + "VALUES(?, ?);";
-                preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-
-                preparedStatement.setInt(1, 1);
-                preparedStatement.setInt(2, aluno.getIDcurso());
-                preparedStatement.executeUpdate();
-
-                bancoDeDados.fecharConexao();
-                bancoDeDados.abrirConexao();
-                query = "CALL inserir_historico(?);";
-
-                preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-                preparedStatement.setInt(1, util.getIDaluno(aluno.getCpf()));
             } catch (SQLException | ParseException e) {
                 e.printStackTrace();
             } finally {
@@ -244,7 +201,7 @@ public interface GerenteSQL<Modelo> {
         public void RemoverSQL(int idaluno) {
             BancoDeDados bancoDeDados = new BancoDeDados();
             try {
-                String query = "UPDATE aluno SET sit_aluno=b'0' WHERE aluno_id=?;";
+                String query = "CALL ExcluirAluno(?);";
                 PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
                 preparedStatement.setInt(1, idaluno);
 

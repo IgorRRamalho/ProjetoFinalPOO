@@ -11,7 +11,13 @@ public class App {
 
         Utilitarios util = new Utilitarios();
         GerenteGeral gerenteCurso= new GerenteGeral.Curso();
-        gerenteCurso.Consultar();
+         GerenteGeral gerenteAluno= new GerenteGeral.Aluno();
+        //gerenteAluno.Inserir();
+
+        Menus menu = new Menus();
+
+        menu.menuInical();
+        
 
         System.out.println("vamos trancar alex!");
     }

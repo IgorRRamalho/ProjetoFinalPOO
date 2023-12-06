@@ -44,8 +44,6 @@ public interface GerenteGeral {
             CursoM curso = new CursoM(nomeCurso, turno, dataCriacao, notaMec, quantSemestres, minEducacaoId,
                     anoAltGrade, tcc, creditos, horasComplementares);
 
-            InserirSQL(curso);
-
             int quant = Input.readInt("Informe a quantidade de matérias existentes no curso:");
 
             for (int i = 0; i < quant; i++) {
@@ -87,9 +85,7 @@ public interface GerenteGeral {
         public void Remover() {
 
             int idCurso = Input.readInt("Digite o ID do curso: ");
-
-            // RemoverSQL(idCurso);
-
+            GerenteSQL.CursoC.RemoverSQL(idCurso);
         }
 
         @Override
@@ -107,18 +103,15 @@ public interface GerenteGeral {
         public void Inserir() {
             System.out.println("--------------- Cadastro de Matéria ---------------");
             String nomeMateria = Input.readString("Nome da matéria: ");
-
             MateriasM materia = new MateriasM(nomeMateria);
-
-            // InserirSQL(materia);
 
         }
 
         @Override
         public void Remover() {
             int materiaId = Input.readInt("Digite o ID da matéria: ");
+            GerenteSQL.MateriasC.RemoverSQL(materiaId);
 
-            // RemoverSQL(materiaId);
         }
 
         @Override
@@ -126,7 +119,7 @@ public interface GerenteGeral {
             BancoDeDados bancoDeDados = new BancoDeDados();
 
             try {
-                String query = "SELECT * FROM historico WHERE aluno_id = ? AND materia_id = ?";
+                String query = "";
                 PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
                 // preparedStatement.setInt(1, idAluno);
                 // preparedStatement.setInt(2, idMateria);
@@ -140,13 +133,12 @@ public interface GerenteGeral {
                 e.printStackTrace();
             }
         }
-
     }
 
     public class Aluno implements GerenteGeral {
 
         @Override
-        public static void Inserir() {
+        public void Inserir() {
 
             System.out.print("##----------- Dados Pessoais -----------##\n");
 
@@ -179,7 +171,8 @@ public interface GerenteGeral {
                 AlunoM aluno = new AlunoM(rua, bairro, numero, complemento, cep, cidade, estado, nome, nomePai, nomeMae,
                         rg, cpf, dataNasc, email, sexo, celular, id_curso);
 
-                // InserirSQL(aluno, endereco, id_curso);
+                GerenteSQL.AlunoC.InserirSQL(aluno, id_curso);
+
             }
 
         }
@@ -187,6 +180,7 @@ public interface GerenteGeral {
         @Override
         public void Remover() {
             int idAluno = Input.readInt("Digite o ID do aluno:");
+            GerenteSQL.AlunoC.RemoverSQL(idAluno);
 
         }
 
