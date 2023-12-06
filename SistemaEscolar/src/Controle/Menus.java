@@ -257,6 +257,7 @@ public class Menus {
                 GerenteGeral.CursoC.Remover();
                 break;
             case 2:
+            
                 // ConsultarPorID();
                 break;
             case 3:

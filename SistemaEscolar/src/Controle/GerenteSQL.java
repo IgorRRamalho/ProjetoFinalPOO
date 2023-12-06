@@ -12,6 +12,7 @@ import Controle.GerenteGeral.Materias;
 import Modelo.AlunoM;
 import Modelo.CursoM;
 import Modelo.EnderecoM;
+import Modelo.GradeCursoM;
 import Modelo.MateriasM;
 
 public interface GerenteSQL<Modelo> {
@@ -19,11 +20,9 @@ public interface GerenteSQL<Modelo> {
 
     void RemoverSQL(int ID);
 
-    ResultSet ConsultarSQL(int ID);
+    ResultSet ConsultarSQL(int ID, String query);
 
-    Materias MateriasC = new Materias();
-    Curso CursoC = new Curso();
-    Aluno AlunoC = new Aluno();
+
     Utilitarios util = new Utilitarios();
     ConsultasC ConsultaC = new ConsultasC();
 
@@ -57,8 +56,7 @@ public interface GerenteSQL<Modelo> {
                 preparedStatement.setInt(10, curso.getHorasComplementares());
 
                 preparedStatement.executeUpdate();
-                bancoDeDados.fecharConexao();
-                bancoDeDados.abrirConexao();
+             
 
             } catch (SQLException | ParseException e) {
                 e.printStackTrace();
@@ -86,21 +84,21 @@ public interface GerenteSQL<Modelo> {
         }
 
         @Override
-        public ResultSet ConsultarSQL(int idCurso) {
+        public ResultSet ConsultarSQL(int idCurso, String query) {
             BancoDeDados bancoDeDados = new BancoDeDados();
             bancoDeDados.abrirConexao();
-            ResultSet resultSet = null;
+            ResultSet resultado = null;
             try {
-                String query = "";
+               
                 PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
                 preparedStatement.setInt(1, idCurso);
 
-                resultSet = preparedStatement.executeQuery();
+                resultado = preparedStatement.executeQuery();
 
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
-                return resultSet;
+                return resultado;
             }
         }
 
@@ -145,7 +143,7 @@ public interface GerenteSQL<Modelo> {
         }
 
         @Override
-        public ResultSet ConsultarSQL(int ID) {
+        public ResultSet ConsultarSQL(int ID, String query) {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'ConsultarSQL'");
         }
@@ -212,11 +210,49 @@ public interface GerenteSQL<Modelo> {
         }
 
         @Override
-        public ResultSet ConsultarSQL(int ID) {
+        public ResultSet ConsultarSQL(int ID, String query) {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'ConsultarSQL'");
         }
 
     }
+
+        public class GradeCurso implements GerenteSQL<GradeCursoM>{
+            
+            @Override
+            public void InserirSQL(GradeCursoM grade, int a) {
+                BancoDeDados bancoDeDados = new BancoDeDados();
+                bancoDeDados.abrirConexao();
+    
+                try {
+                    String query = "INSERT INTO grade_curso (curso_id, materia_id)"
+                            + " VALUES(?, ?);";
+    
+                    PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
+                    preparedStatement.setInt(1, grade.getCursoId());
+                    preparedStatement.setInt(2, grade.getMateriaId());
+    
+                    preparedStatement.executeUpdate();
+    
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } finally {
+                    bancoDeDados.fecharConexao();
+                }
+            }
+    
+            @Override
+            public void RemoverSQL(int ID) {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'RemoverSQL'");
+            }
+    
+            @Override
+            public ResultSet ConsultarSQL(int ID, String query) {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'ConsultarSQL'");
+            }
+        }
+
 
 }

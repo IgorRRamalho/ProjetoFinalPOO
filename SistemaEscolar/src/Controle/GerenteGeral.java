@@ -16,12 +16,15 @@ public interface GerenteGeral {
 
     void Remover();
 
-    void Consultar() throws SQLException, ParseException;
+    void Consultar(String prequery) throws SQLException, ParseException;
 
     Materias MateriasC = new Materias();
     Curso CursoC = new Curso();
     Aluno AlunoC = new Aluno();
-    GerenteSQL<CursoM> gerenteCurso = new GerenteSQL.Curso();
+    GerenteSQL<CursoM> gerenteCursoSQL = new GerenteSQL.Curso();
+    GerenteSQL<AlunoM> gerenteAlunoSQL = new GerenteSQL.Aluno();
+    GerenteSQL<GradeCursoM> gerenteGradeSQL = new GerenteSQL.GradeCurso();
+    GerenteSQL<MateriasM> gerenteMateriaSQL = new GerenteSQL.Materias();
 
     public Utilitarios util = new Utilitarios();
 
@@ -44,6 +47,8 @@ public interface GerenteGeral {
             CursoM curso = new CursoM(nomeCurso, turno, dataCriacao, notaMec, quantSemestres, minEducacaoId,
                     anoAltGrade, tcc, creditos, horasComplementares);
 
+            gerenteCursoSQL.InserirSQL(curso, 0);
+
             int quant = Input.readInt("Informe a quantidade de matérias existentes no curso:");
 
             for (int i = 0; i < quant; i++) {
@@ -54,27 +59,8 @@ public interface GerenteGeral {
                     i--;
 
                 } else {
-
                     GradeCursoM grade = new GradeCursoM(util.getIDcurso(nomeCurso), idMateria);
-
-                    BancoDeDados bancoDeDados = new BancoDeDados();
-                    bancoDeDados.abrirConexao();
-
-                    try {
-                        String query = "INSERT INTO grade_curso (curso_id, materia_id)"
-                                + " VALUES(?, ?);";
-
-                        PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-                        preparedStatement.setInt(1, util.getIDcurso(nomeCurso));
-                        preparedStatement.setInt(2, grade.getMateriaId());
-
-                        preparedStatement.executeUpdate();
-
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    } finally {
-                        bancoDeDados.fecharConexao();
-                    }
+                    gerenteGradeSQL.InserirSQL(grade, 0);
 
                 }
             }
@@ -85,14 +71,16 @@ public interface GerenteGeral {
         public void Remover() {
 
             int idCurso = Input.readInt("Digite o ID do curso: ");
-            GerenteSQL.CursoC.RemoverSQL(idCurso);
+            gerenteCursoSQL.RemoverSQL(idCurso);
         }
 
         @Override
-        public void Consultar() throws SQLException, ParseException {
+        public void Consultar(String prequery) throws SQLException, ParseException {
+
             int idcurso = Input.readInt("DIGITE O ID DO CURSO:");
+           
             ConsultasC menuConsulta = new ConsultasC();
-            menuConsulta.ConsultaCursoPorID(gerenteCurso.ConsultarSQL(idcurso));
+            menuConsulta.ConsultaCursoPorID(gerenteCursoSQL.ConsultarSQL(idcurso,prequery));
 
         }
 
@@ -111,11 +99,10 @@ public interface GerenteGeral {
         public void Remover() {
             int materiaId = Input.readInt("Digite o ID da matéria: ");
             GerenteSQL.MateriasC.RemoverSQL(materiaId);
-
         }
 
         @Override
-        public void Consultar() throws SQLException {
+        public void Consultar(String ) throws SQLException {
             BancoDeDados bancoDeDados = new BancoDeDados();
 
             try {
@@ -171,7 +158,7 @@ public interface GerenteGeral {
                 AlunoM aluno = new AlunoM(rua, bairro, numero, complemento, cep, cidade, estado, nome, nomePai, nomeMae,
                         rg, cpf, dataNasc, email, sexo, celular, id_curso);
 
-                GerenteSQL.AlunoC.InserirSQL(aluno, id_curso);
+                gerenteAlunoSQL.InserirSQL(aluno, id_curso);
 
             }
 
