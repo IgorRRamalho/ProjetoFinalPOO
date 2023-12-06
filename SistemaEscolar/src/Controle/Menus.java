@@ -1,8 +1,18 @@
 package Controle;
 
 import java.util.Scanner;
+import Controle.GerenteGeral.Aluno;
+import Controle.GerenteGeral.Curso;
+import Controle.GerenteGeral.Aluno;
+import Modelo.*;
+
 
 public class Menus {
+
+    GerenteGeral gerenteCurso= new GerenteGeral.Curso();
+
+
+
     Scanner leitor = new Scanner(System.in);
     Utilitarios util = new Utilitarios();
 
@@ -38,32 +48,66 @@ public class Menus {
         }
     }
 
+    /**
+     * 
+     */
     public void menuAluno() {
         System.out.print("##--Menu Aluno--##\n\n");
         System.out.print("|-------------------------------|\n");
-        System.out.print("| Opção 1 - Adiconar Aluno      |\n");
-        System.out.print("| Opção 2 - Remover Aluno       |\n");
-        System.out.print("| Opção 3 - Alterar Aluno       |\n");
-        System.out.print("| Opção 4 - Sair                |\n");
+        System.out.print("| Opção 1 - Inserir novo Aluno      |\n");
+        System.out.print("| Opção 2 - Gerenciar Aluno       |\n");
+        System.out.print("| Opção 3 - Voltar Menu Inicial                |\n");
         System.out.print("|-------------------------------|\n");
-        System.out.print("Digite uma opção: ");
+        int opcao= Input.readInt();
 
-        int opcao = leitor.nextInt();
         util.limparTelaConsole();
 
         switch (opcao) {
             case 1:
-                // adicionaAluno();
+                Aluno.Inserir();
                 break;
             case 2:
-                // removeAluno();
+                GerenciarAluno();
                 break;
             case 3:
-                // alteraAluno();
+                menuInical();
                 break;
             default:
                 break;
         }
+    }
+
+    public void GerenciarAluno() {
+        System.out.print("##--Menu Gerenciar Aluno--##\n\n");
+        System.out.print("|-------------------------------|\n");
+        System.out.print("| Opção 1 - Gerenciar Dados Pessoais      |\n");
+        System.out.print("| Opção 2 - Gerenciar Dados Academicos       |\n");
+        System.out.print("| Opção 3 - Gerenciar Dados Financeiros       |\n");
+        System.out.print("| Opção 4 - Voltar Menu Inicial                |\n");
+        System.out.print("|-------------------------------|\n");
+
+        int opcao = Input.readInt();
+
+        switch (opcao) {
+            case 1:
+                GerenciarDPessoais();
+                break;
+            case 2:
+                GerenciarAluno();
+                break;
+            case 3:
+                // alteraAluno();
+                break;
+            case 4:
+                menuInical();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void GerenciarDPessoais(){
+        
     }
 
     public void menuCurso() {

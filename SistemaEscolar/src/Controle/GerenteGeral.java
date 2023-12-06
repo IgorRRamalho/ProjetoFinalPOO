@@ -44,7 +44,7 @@ public interface GerenteGeral {
             CursoM curso = new CursoM(nomeCurso, turno, dataCriacao, notaMec, quantSemestres, minEducacaoId,
                     anoAltGrade, tcc, creditos, horasComplementares);
 
-            // InserirSQL(curso);
+            InserirSQL(curso);
 
             int quant = Input.readInt("Informe a quantidade de matérias existentes no curso:");
 
@@ -121,8 +121,6 @@ public interface GerenteGeral {
             // RemoverSQL(materiaId);
         }
 
-
-
         @Override
         public void Consultar() throws SQLException {
             BancoDeDados bancoDeDados = new BancoDeDados();
@@ -148,7 +146,7 @@ public interface GerenteGeral {
     public class Aluno implements GerenteGeral {
 
         @Override
-        public void Inserir() {
+        public static void Inserir() {
 
             System.out.print("##----------- Dados Pessoais -----------##\n");
 
@@ -191,7 +189,6 @@ public interface GerenteGeral {
             int idAluno = Input.readInt("Digite o ID do aluno:");
 
         }
-       
 
         @Override
         public void Consultar() throws SQLException {
