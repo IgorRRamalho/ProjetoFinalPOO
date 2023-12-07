@@ -1,24 +1,40 @@
 package Controle;
 
+import java.sql.SQLException;
+import java.text.ParseException;
+
+import Modelo.AlunoM;
+import Modelo.CursoM;
+import Modelo.GradeCursoM;
+import Modelo.MateriasM;
+
 public class Menus {
+
+    String prequery;
 
     // GerenteGeral para cursos
     GerenteGeral gerenteCurso = new GerenteGeral.Curso();
 
+    GerenteSQL<CursoM> gerenteCursoSQL = new GerenteSQL.Curso();
+    GerenteSQL<AlunoM> gerenteAlunoSQL = new GerenteSQL.Aluno();
+    GerenteSQL<GradeCursoM> gerenteGradeSQL = new GerenteSQL.GradeCurso();
+    GerenteSQL<MateriasM> gerenteMateriaSQL = new GerenteSQL.Materias();
+
     // Utilitários
     Utilitarios util = new Utilitarios();
 
+    ConsultasC ConsultaControle = new ConsultasC();
+
     // Menu inicial
-    public void menuInical() {
+    public void menuInical() throws SQLException, ParseException {
         System.out.println("##--Menu Inicial--##\n");
 
         // Exibição das opções
         System.out.println("|-------------------------------|");
-        System.out.println("| Opção 1 - Gerenciar Alunos    |");
-        System.out.println("| Opção 2 - Gerenciar Cursos    |");
-        System.out.println("| Opção 3 - Gerenciar Materias  |");
-        System.out.println("| Opção 4 - Voltar              |");
-        System.out.println("| Opção 5 - Sair                |");
+        System.out.println("| Opção 1 - Alunos              |");
+        System.out.println("| Opção 2 - Cursos              |");
+        System.out.println("| Opção 3 - Materias            |");
+        System.out.println("| Opção 4 - Sair                |");
         System.out.println("|-------------------------------|");
         System.out.print("Digite uma opção: ");
 
@@ -45,7 +61,7 @@ public class Menus {
     }
 
     // Menu de gerenciamento de alunos
-    public void menuAluno() {
+    public void menuAluno() throws SQLException, ParseException {
         System.out.println("##--Menu Aluno--##\n");
 
         // Exibição das opções
@@ -65,7 +81,9 @@ public class Menus {
                 GerenteGeral.AlunoC.Inserir();
                 break;
             case 2:
-                GerenciarAluno();
+                System.out.println("Informe o ID do aluno:");
+                int id = Input.readInt();
+                GerenciarAluno(id);
                 break;
             case 3:
                 menuInical();
@@ -76,7 +94,7 @@ public class Menus {
     }
 
     // Menu de gerenciamento de dados de alunos
-    public void GerenciarAluno() {
+    public void GerenciarAluno(int id) throws SQLException, ParseException {
         System.out.println("##--Menu Gerenciar Aluno--##\n");
 
         // Exibição das opções
@@ -93,13 +111,13 @@ public class Menus {
         // Switch para lidar com as opções escolhidas
         switch (opcao) {
             case 1:
-                GerenciarDPessoais();
+                GerenciarDPessoais(id);
                 break;
             case 2:
-                GerenciarDAcademicos();
+                GerenciarDAcademicos(id);
                 break;
             case 3:
-                GerenciarDFinanceiros();
+                GerenciarDFinanceiros(id);
                 break;
             case 4:
                 menuInical();
@@ -110,13 +128,14 @@ public class Menus {
     }
 
     // Menu de gerenciamento de dados pessoais de alunos
-    public void GerenciarDPessoais() {
+    public void GerenciarDPessoais(int id) throws SQLException, ParseException {
         System.out.println("##--Menu Gerenciar Dados Pessoais--##\n");
 
         // Exibição das opções
         System.out.println("|-------------------------------|");
         System.out.println("| Opção 1 - Atualizar Dados de Origem     |");
         System.out.println("| Opção 2 - Atualizar Endereço            |");
+        System.out.println("| Opção 3 - Consulta Dados Pessoas            |");
         System.out.println("| Opção 3 - Voltar Menu Inicial           |");
         System.out.println("|-------------------------------|");
 
@@ -132,7 +151,8 @@ public class Menus {
                 // Aluno.AtualizarEndereço;
                 break;
             case 3:
-                menuInical();
+                prequery = "SELECT * FROM view_dados_pessoais_aluno WHERE aluno_id = ?;";
+                ConsultaControle.ConsultaDPessoais(gerenteCursoSQL.ConsultarSQL(id, prequery));
                 break;
             default:
                 break;
@@ -140,7 +160,7 @@ public class Menus {
     }
 
     // Menu de gerenciamento de dados acadêmicos de alunos
-    public void GerenciarDAcademicos() {
+    public void GerenciarDAcademicos(int id) throws SQLException, ParseException {
         System.out.println("##--Menu Gerenciar Dados Acadêmicos--##\n");
 
         // Exibição das opções
@@ -166,7 +186,8 @@ public class Menus {
                 // GerenteGeral.AlunoC.AtualizarFaltas();
                 break;
             case 4:
-                menuInical();
+                prequery = "SELECT * FROM view_historico WHERE aluno_id = ?;";
+                ConsultaControle.ConsultaHistorico(gerenteCursoSQL.ConsultarSQL(id, prequery));
                 break;
             default:
                 break;
@@ -174,7 +195,7 @@ public class Menus {
     }
 
     // Menu de gerenciamento de dados financeiros de alunos
-    public void GerenciarDFinanceiros() {
+    public void GerenciarDFinanceiros(int id) throws SQLException, ParseException {
         System.out.println("##--Menu Gerenciar Dados Financeiros--##\n");
 
         // Exibição das opções
@@ -205,7 +226,7 @@ public class Menus {
     }
 
     // Menu de cursos
-    public void menuCurso() {
+    public void menuCurso() throws SQLException, ParseException {
         System.out.println("##--Menu Curso--##\n");
 
         // Exibição das opções
@@ -225,7 +246,9 @@ public class Menus {
                 GerenteGeral.CursoC.Inserir();
                 break;
             case 2:
-                GerenciarCurso();
+                System.out.println("Informe o ID do Curso:");
+                int id = Input.readInt();
+                GerenciarCurso(id);
                 break;
             case 3:
                 menuInical();
@@ -236,7 +259,7 @@ public class Menus {
     }
 
     // Menu de gerenciamento de cursos
-    public void GerenciarCurso() {
+    public void GerenciarCurso(int id) throws SQLException, ParseException {
         System.out.println("##--Menu Gerenciar Curso--##\n");
 
         // Exibição das opções
@@ -254,14 +277,15 @@ public class Menus {
         // Switch para lidar com as opções escolhidas
         switch (opcao) {
             case 1:
-                GerenteGeral.CursoC.Remover();
+                gerenteCursoSQL.RemoverSQL(id);
                 break;
             case 2:
-            
-                // ConsultarPorID();
+                prequery = "SELECT * FROM view_todos_cursos_com_materias WHERE curso_id= ?;";
+                ConsultaControle.ConsultaCursoPorID(gerenteCursoSQL.ConsultarSQL(id, prequery));
                 break;
             case 3:
-                // ConsultarPorAluno();
+                prequery = "SELECT * FROM view_dados_academicos where curso_id = ?;";
+                ConsultaControle.ConsultaCursoPorID(gerenteCursoSQL.ConsultarSQL(id, prequery));
                 break;
             case 4:
                 menuInical();
@@ -272,14 +296,14 @@ public class Menus {
     }
 
     // Menu de matérias
-    public void menuMateria() {
+    public void menuMateria() throws SQLException, ParseException {
         System.out.println("##--Menu Materia--##\n");
 
         // Exibição das opções
         System.out.println("|-------------------------------|");
         System.out.println("| Opção 1 - Inserir Materia      |");
         System.out.println("| Opção 2 - Remover Materia      |");
-        System.out.println("| Opção 3 - Consultar Materia    |");
+        System.out.println("| Opção 3 - Consultar Todas Materias    |");
         System.out.println("| Opção 4 - Voltar Menu Inicial  |");
         System.out.println("|-------------------------------|");
         System.out.print("Digite uma opção: ");
@@ -296,12 +320,15 @@ public class Menus {
                 GerenteGeral.MateriasC.Remover();
                 break;
             case 3:
-                // GerenteGeral.MateriasC.Consultar();
+                prequery = "SELECT * FROM view_todas_materias;";
+                ConsultaControle.ConsultaMateria(gerenteMateriaSQL.ConsultarSQL(0, prequery));
                 break;
             case 4:
                 menuInical();
                 break;
+
             default:
+                System.out.println("OPÇÃO INVÁLIDA");
                 break;
         }
     }

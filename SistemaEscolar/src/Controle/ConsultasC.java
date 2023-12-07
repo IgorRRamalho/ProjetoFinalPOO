@@ -62,17 +62,81 @@ public class ConsultasC {
     }
 
     void ConsultaMateria(ResultSet base) throws SQLException, ParseException {
-        System.out.println("============== Curso ==============");
+        System.out.println("============== Materias ==============");
         if (base.next()) { // Move the cursor to the first row
 
-            String nomeMateria = base.getString(1);
+            int idMateria = base.getInt(1);
+            String nomeMateria = base.getString(2);
 
             System.out.println("ID da Materia: " + idMateria);
             System.out.println("Nome da Materia: " + nomeMateria);
             bancoDeDados.fecharConexao();
 
+            while (base.next()) {
+                int id = base.getInt("id");
+                String nome = base.getString("nome");
+                System.out.println("ID: " + id + ", Nome: " + nome);
+            }
+
         } else {
             System.out.println("Não foram encontradas matérias com este nome.");
+        }
+    }
+
+
+      void ConsultaHistorico(ResultSet base) throws SQLException, ParseException {
+        System.out.println("============== Historico ==============");
+        if (base.next()) { // Move the cursor to the first row
+
+            int idAluno = base.getInt(1);
+            String nomeAluno = base.getString(2);
+            String nomeMateria = base.getString(3);
+            Float prova1 = base.getFloat(4);
+            Float prova2 = base.getFloat(5);
+            int faltas = base.getInt(6);
+
+            System.out.println("ID do Aluno: " + idAluno);
+            System.out.println("Nome do Aluno: " + nomeAluno);
+            System.out.println("Nome da Materia: " + nomeMateria);
+            System.out.println("Nota P1: " + prova1);
+            System.out.println("Nota P2: " + prova2);
+            System.out.println("Faltas: " + faltas);
+            bancoDeDados.fecharConexao();
+
+
+        } else {
+            System.out.println("Não foi encontrado hitórico com este ID.");
+        }
+    }
+
+    //id nome rg cpf nasc sex email cel pai mae historicoEM resevista comp_resd coleg anti  eja ensi_tec rua bairro num compl cep cidaDWE ESTADO
+
+    void ConsultaDPessoais(ResultSet base) throws SQLException, ParseException {
+        System.out.println("============== Dados Pessoais ==============");
+        if (base.next()) { // Move the cursor to the first row
+
+            int idAluno = base.getInt(1);
+            String nomeAluno = base.getString(2);
+            int rg = base.getInt(3);
+            String cpf = base.getString(4);
+            String data_nasc = 
+
+
+
+            Date dt = new SimpleDateFormat("yyyy-MM-dd").parse(dataCriacao);
+            String dataFormatada = new SimpleDateFormat("dd/MM/yyyy").format(dt);
+
+            System.out.println("ID do Aluno: " + idAluno);
+            System.out.println("Nome do Aluno: " + nomeAluno);
+            System.out.println("Nome da Materia: " + nomeMateria);
+            System.out.println("Nota P1: " + prova1);
+            System.out.println("Nota P2: " + prova2);
+            System.out.println("Faltas: " + faltas);
+            bancoDeDados.fecharConexao();
+
+
+        } else {
+            System.out.println("Não foi encontrado hitórico com este ID.");
         }
     }
 }

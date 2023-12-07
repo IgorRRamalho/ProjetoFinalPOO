@@ -78,9 +78,9 @@ public interface GerenteGeral {
         public void Consultar(String prequery) throws SQLException, ParseException {
 
             int idcurso = Input.readInt("DIGITE O ID DO CURSO:");
-           
+
             ConsultasC menuConsulta = new ConsultasC();
-            menuConsulta.ConsultaCursoPorID(gerenteCursoSQL.ConsultarSQL(idcurso,prequery));
+            menuConsulta.ConsultaCursoPorID(gerenteCursoSQL.ConsultarSQL(idcurso, prequery));
 
         }
 
@@ -98,27 +98,12 @@ public interface GerenteGeral {
         @Override
         public void Remover() {
             int materiaId = Input.readInt("Digite o ID da matéria: ");
-            GerenteSQL.MateriasC.RemoverSQL(materiaId);
+            gerenteMateriaSQL.RemoverSQL(materiaId);
         }
 
         @Override
-        public void Consultar(String ) throws SQLException {
-            BancoDeDados bancoDeDados = new BancoDeDados();
+        public void Consultar(String a) throws SQLException {
 
-            try {
-                String query = "";
-                PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-                // preparedStatement.setInt(1, idAluno);
-                // preparedStatement.setInt(2, idMateria);
-
-                ResultSet resultSet = preparedStatement.executeQuery();
-
-                while (resultSet.next()) {
-                    // Recupere os dados do histórico conforme necessário
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -167,12 +152,12 @@ public interface GerenteGeral {
         @Override
         public void Remover() {
             int idAluno = Input.readInt("Digite o ID do aluno:");
-            GerenteSQL.AlunoC.RemoverSQL(idAluno);
+            gerenteAlunoSQL.RemoverSQL(idAluno);
 
         }
 
         @Override
-        public void Consultar() throws SQLException {
+        public void Consultar(String prequery) throws SQLException, ParseException {
             // TODO Auto-generated method stub
             throw new UnsupportedOperationException("Unimplemented method 'Consultar'");
         }

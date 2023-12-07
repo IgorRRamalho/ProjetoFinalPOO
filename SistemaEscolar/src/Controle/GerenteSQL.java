@@ -22,7 +22,6 @@ public interface GerenteSQL<Modelo> {
 
     ResultSet ConsultarSQL(int ID, String query);
 
-
     Utilitarios util = new Utilitarios();
     ConsultasC ConsultaC = new ConsultasC();
 
@@ -56,7 +55,6 @@ public interface GerenteSQL<Modelo> {
                 preparedStatement.setInt(10, curso.getHorasComplementares());
 
                 preparedStatement.executeUpdate();
-             
 
             } catch (SQLException | ParseException e) {
                 e.printStackTrace();
@@ -89,11 +87,12 @@ public interface GerenteSQL<Modelo> {
             bancoDeDados.abrirConexao();
             ResultSet resultado = null;
             try {
-               
+
                 PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
                 preparedStatement.setInt(1, idCurso);
 
                 resultado = preparedStatement.executeQuery();
+                return resultado;
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -130,6 +129,7 @@ public interface GerenteSQL<Modelo> {
         @Override
         public void RemoverSQL(int materiaId) {
             BancoDeDados bancoDeDados = new BancoDeDados();
+            bancoDeDados.abrirConexao();
 
             try {
                 String query = "CALL ExcluirDisciplina(?);";
@@ -144,115 +144,139 @@ public interface GerenteSQL<Modelo> {
 
         @Override
         public ResultSet ConsultarSQL(int ID, String query) {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'ConsultarSQL'");
-        }
-
-    }
-
-    public class Aluno implements GerenteSQL<AlunoM> {
-
-        @Override
-        public void InserirSQL(AlunoM aluno, int idcurso) {
             BancoDeDados bancoDeDados = new BancoDeDados();
+            ResultSet resultado;
             bancoDeDados.abrirConexao();
 
             try {
-                String query = " CALL hml.cadastrar_aluno(? , ? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? , ?, @aluno_id_out) ";
-
                 PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-                preparedStatement.setString(1, aluno.getNome());
-                preparedStatement.setString(2, aluno.getNomePai());
-                preparedStatement.setString(3, aluno.getNomeMae());
-                preparedStatement.setString(4, aluno.getRg());
-                preparedStatement.setString(5, aluno.getCpf());
+                resultado = preparedStatement.executeQuery();
+                return resultado;
 
-                // Convert the date to the 'YYYY-MM-DD' format
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                Date date = dateFormat.parse(aluno.getDataNasc());
-                java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-
-                preparedStatement.setDate(6, sqlDate);
-                preparedStatement.setString(7, aluno.getEmail());
-                preparedStatement.setString(8, String.valueOf(aluno.getSexo()));
-                preparedStatement.setString(9, aluno.getCelular());
-
-                preparedStatement.setString(10, aluno.getRua());
-                preparedStatement.setString(11, aluno.getBairro());
-                preparedStatement.setInt(12, aluno.getNumero());
-                preparedStatement.setString(13, aluno.getComplemento());
-                preparedStatement.setString(14, aluno.getCep());
-                preparedStatement.setString(15, aluno.getCidade());
-                preparedStatement.setString(16, aluno.getEstado());
-                preparedStatement.setInt(17, idcurso);
-                preparedStatement.executeUpdate();
-
-            } catch (SQLException | ParseException e) {
-                e.printStackTrace();
-            } finally {
-                bancoDeDados.fecharConexao();
-                util.limparTelaConsole();
-            }
-        }
-
-        @Override
-        public void RemoverSQL(int idaluno) {
-            BancoDeDados bancoDeDados = new BancoDeDados();
-            try {
-                String query = "CALL ExcluirAluno(?);";
-                PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-                preparedStatement.setInt(1, idaluno);
-
-                preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
+            } finally {
+                return resultado;
             }
+
         }
 
-        @Override
-        public ResultSet ConsultarSQL(int ID, String query) {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'ConsultarSQL'");
+        public class Aluno implements GerenteSQL<AlunoM> {
+
+            @Override
+            public void InserirSQL(AlunoM aluno, int idcurso) {
+                BancoDeDados bancoDeDados = new BancoDeDados();
+                bancoDeDados.abrirConexao();
+
+                try {
+                    String query = " CALL hml.cadastrar_aluno(? , ? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? , ?, @aluno_id_out) ";
+
+                    PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
+                    preparedStatement.setString(1, aluno.getNome());
+                    preparedStatement.setString(2, aluno.getNomePai());
+                    preparedStatement.setString(3, aluno.getNomeMae());
+                    preparedStatement.setString(4, aluno.getRg());
+                    preparedStatement.setString(5, aluno.getCpf());
+
+                    // Convert the date to the 'YYYY-MM-DD' format
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    Date date = dateFormat.parse(aluno.getDataNasc());
+                    java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+
+                    preparedStatement.setDate(6, sqlDate);
+                    preparedStatement.setString(7, aluno.getEmail());
+                    preparedStatement.setString(8, String.valueOf(aluno.getSexo()));
+                    preparedStatement.setString(9, aluno.getCelular());
+
+                    preparedStatement.setString(10, aluno.getRua());
+                    preparedStatement.setString(11, aluno.getBairro());
+                    preparedStatement.setInt(12, aluno.getNumero());
+                    preparedStatement.setString(13, aluno.getComplemento());
+                    preparedStatement.setString(14, aluno.getCep());
+                    preparedStatement.setString(15, aluno.getCidade());
+                    preparedStatement.setString(16, aluno.getEstado());
+                    preparedStatement.setInt(17, idcurso);
+                    preparedStatement.executeUpdate();
+
+                } catch (SQLException | ParseException e) {
+                    e.printStackTrace();
+                } finally {
+                    bancoDeDados.fecharConexao();
+                    util.limparTelaConsole();
+                }
+            }
+
+            @Override
+            public void RemoverSQL(int idaluno) {
+                BancoDeDados bancoDeDados = new BancoDeDados();
+                try {
+                    String query = "CALL ExcluirAluno(?);";
+                    PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
+                    preparedStatement.setInt(1, idaluno);
+
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public ResultSet ConsultarSQL(int ID, String query) {
+                BancoDeDados bancoDeDados = new BancoDeDados();
+                ResultSet resultado = null;
+                bancoDeDados.abrirConexao();
+
+                try {
+                    PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
+                    preparedStatement.setInt(1, ID);
+                    resultado = preparedStatement.executeQuery();
+                    return resultado;
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                } finally {
+                    return resultado;
+                }
+
+            }
+
         }
 
-    }
+        public class GradeCurso implements GerenteSQL<GradeCursoM> {
 
-        public class GradeCurso implements GerenteSQL<GradeCursoM>{
-            
             @Override
             public void InserirSQL(GradeCursoM grade, int a) {
                 BancoDeDados bancoDeDados = new BancoDeDados();
                 bancoDeDados.abrirConexao();
-    
+
                 try {
                     String query = "INSERT INTO grade_curso (curso_id, materia_id)"
                             + " VALUES(?, ?);";
-    
+
                     PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
                     preparedStatement.setInt(1, grade.getCursoId());
                     preparedStatement.setInt(2, grade.getMateriaId());
-    
+
                     preparedStatement.executeUpdate();
-    
+
                 } catch (SQLException e) {
                     e.printStackTrace();
                 } finally {
                     bancoDeDados.fecharConexao();
                 }
             }
-    
+
             @Override
             public void RemoverSQL(int ID) {
                 // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'RemoverSQL'");
             }
-    
+
             @Override
             public ResultSet ConsultarSQL(int ID, String query) {
                 // TODO Auto-generated method stub
                 throw new UnsupportedOperationException("Unimplemented method 'ConsultarSQL'");
             }
         }
-
-
+    }
 }
