@@ -8,8 +8,21 @@ import Modelo.CursoM;
 import Modelo.GradeCursoM;
 import Modelo.MateriasM;
 
+/**
+ * A classe Menus contém métodos para exibir e gerenciar menus relacionados a Alunos, Cursos e Matérias.
+ * Os métodos incluem operações como inserção, atualização, consulta e remoção de dados.
+ * Cada menu oferece opções específicas para interação com o sistema de gerenciamento educacional.
+ *
+ * @author Giovanna Serejo
+ * @author Igor 
+ * @author Daniel 
+ * @author Yuri 
+ * @author Brenno 
+ */
+
 public class Menus {
 
+    
     String prequery;
 
     GerenteSQL<CursoM> gerenteCursoSQL = new GerenteSQL.Curso();
@@ -28,8 +41,11 @@ public class Menus {
     AtualizarC AtualizarControle = new AtualizarC();
 
     /**
-     * @throws SQLException
-     * @throws ParseException
+     * Exibe o Menu Inicial do sistema, que oferece opções para acessar menus relacionados a Alunos, Cursos, Materias e Sair.
+     * As opções são lidas do usuário e, dependendo da escolha, direciona para o menu correspondente.
+     *
+     * @throws SQLException em caso de erro na execução de consultas SQL
+     * @throws ParseException se houver um erro durante a análise de entrada
      */
     public void menuInical() throws SQLException, ParseException {
         while (loop) {
@@ -73,17 +89,13 @@ public class Menus {
     }
 
     /**
-     * @autgo
-     * @throws SQLException
-     * @throws ParseException
-     * 
+     * Exibe o Menu de Gerenciamento de Alunos, que inclui opções para inserir novo aluno, gerenciar aluno e voltar ao Menu Inicial.
+     * As opções são lidas do usuário e, dependendo da escolha, direciona para as operações correspondentes.
+     *
+     * @throws SQLException em caso de erro na execução de consultas SQL
+     * @throws ParseException se houver um erro durante a análise de entrada
+     * @GiovannaSrj
      */
-
-    /**
-     * @throws SQLException
-     * @throws ParseException
-     */
-    // Menu de gerenciamento de alunos
     public void menuAluno() throws SQLException, ParseException {
         System.out.println("\t##--Menu Aluno--##");
 
@@ -123,7 +135,15 @@ public class Menus {
         }
     }
 
-    // Menu de gerenciamento de dados de alunos
+    /**
+     * Gerencia os dados de um aluno, incluindo dados pessoais, acadêmicos e financeiros.
+     * Oferece opções para atualizar diferentes informações associadas ao aluno.
+     *
+     * @param id ID do aluno a ser gerenciado
+     * @throws SQLException em caso de erro na execução de consultas SQL
+     * @throws ParseException se houver um erro durante a análise de entrada
+     * @IgorRRamalho
+     */
     public void GerenciarAluno(int id) throws SQLException, ParseException {
         boolean loop2 = true;
         int idmat;
@@ -175,6 +195,14 @@ public class Menus {
         }
     }
 
+    /**
+     * Gerencia os dados pessoais de um aluno, oferecendo opções para atualizar informações como histórico escolar, reservista, etc.
+     *
+     * @param id ID do aluno cujos dados pessoais serão gerenciados
+     * @throws SQLException em caso de erro na execução de consultas SQL
+     * @throws ParseException se houver um erro durante a análise de entrada
+     * @DaniPorto
+     */
     public void GerenciarDPessoais(int id) throws SQLException, ParseException {
         System.out.println("  ##--Menu Gerenciar Dados Pessoais--##");
         System.out.println("|----------------------------------------|");
@@ -206,6 +234,14 @@ public class Menus {
         }
     }
 
+    /**
+     * Atualiza informações relacionadas à origem de um aluno, como histórico escolar, reservista, etc.
+     *
+     * @param id ID do aluno cuja origem será atualizada
+     * @throws SQLException em caso de erro na execução de consultas SQL
+     * @throws ParseException se houver um erro durante a análise de entrada
+     * @Brenno
+     */
     public void AtualizarOrigem(int id) throws SQLException, ParseException {
         System.out.println("\t##--Menu Atualizar Origem--##");
         System.out.println("|----------------------------------------------|");
@@ -268,7 +304,15 @@ public class Menus {
         }
     }
 
-    // Menu de gerenciamento de dados acadêmicos de alunos
+    /**
+     * Gerencia os dados acadêmicos de um aluno, oferecendo opções para atualizar notas e faltas em matérias específicas.
+     *
+     * @param id ID do aluno cujos dados acadêmicos serão gerenciados
+     * @param idmat ID da matéria associada aos dados acadêmicos
+     * @throws SQLException em caso de erro na execução de consultas SQL
+     * @throws ParseException se houver um erro durante a análise de entrada
+     * @Yuri
+     */
     public void GerenciarDAcademicos(int id, int idmat) throws SQLException, ParseException {
         float nota;
         System.out.println("##--Menu Gerenciar Dados Acadêmicos--##");
@@ -310,7 +354,14 @@ public class Menus {
         }
     }
 
-    // Menu de gerenciamento de dados financeiros de alunos
+    /**
+     * Gerencia os dados financeiros de um aluno, oferecendo opções para atualizar pagamentos de parcelas e consultar parcelas.
+     *
+     * @param id ID do aluno cujos dados financeiros serão gerenciados
+     * @throws SQLException em caso de erro na execução de consultas SQL
+     * @throws ParseException se houver um erro durante a análise de entrada
+     * @Yuri
+     */
     public void GerenciarDFinanceiros(int id) throws SQLException, ParseException {
         System.out.println("  ##--Menu Gerenciar Dados Financeiros--##");
 
@@ -349,7 +400,13 @@ public class Menus {
         }
     }
 
-    // Menu de cursos
+    /**
+     * Exibe o Menu de Cursos, que inclui opções para inserir novo curso, gerenciar curso e voltar ao Menu Inicial.
+     * As opções são lidas do usuário e, dependendo da escolha, direciona para as operações correspondentes.
+     *
+     * @throws SQLException em caso de erro na execução de consultas SQL
+     * @throws ParseException se houver um erro durante a análise de entrada
+     */
     public void menuCurso() throws SQLException, ParseException {
         System.out.println("\t##--Menu Curso--##");
         System.out.println("|--------------------------------|");
@@ -391,7 +448,13 @@ public class Menus {
         }
     }
 
-    // Menu de gerenciamento de cursos
+    /**
+     * Gerencia os dados de um curso, oferecendo opções para remover o curso, consultar informações e listar alunos associados.
+     *
+     * @param id ID do curso a ser gerenciado
+     * @throws SQLException em caso de erro na execução de consultas SQL
+     * @throws ParseException se houver um erro durante a análise de entrada
+     */
     public void GerenciarCurso(int id) throws SQLException, ParseException {
         System.out.println("\t##--Menu Gerenciar Curso--##");
         System.out.println("|--------------------------------------|");
@@ -430,7 +493,13 @@ public class Menus {
         }
     }
 
-    // Menu de matérias
+    /**
+     * Exibe o Menu de Matérias, que inclui opções para inserir nova matéria, remover matéria, consultar todas as matérias e voltar ao Menu Inicial.
+     * As opções são lidas do usuário e, dependendo da escolha, direciona para as operações correspondentes.
+     *
+     * @throws SQLException em caso de erro na execução de consultas SQL
+     * @throws ParseException se houver um erro durante a análise de entrada
+     */
     public void menuMateria() throws SQLException, ParseException {
         System.out.println("\t  ##--Menu Materia--##");
         System.out.println("|--------------------------------------|");
