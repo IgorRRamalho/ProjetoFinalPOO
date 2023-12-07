@@ -3,33 +3,44 @@ package Controle;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 
-import Modelo.AlunoM;
 
+/**
+ * A classe Utilitarios fornece métodos utilitários para operações com o banco de dados e outras funcionalidades.
+ * 
+ * @author Iury Gabriel
+ * @version 1.0
+ */
 public class Utilitarios {
 
-    public void limparTelaConsole() {
-
+    /**
+     * Limpa a tela do console.
+     */
+    public static void limparTelaConsole() {
         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-
     }
 
-    public int getIDaluno(String palavra) {
+    /**
+     * Obtém o ID de um aluno com base no CPF.
+     * 
+     * @param cpf O CPF do aluno.
+     * @return O ID do aluno ou 0 se não encontrado.
+     */
+    public int getIDaluno(String cpf) {
         BancoDeDados bancoDeDados = new BancoDeDados();
         bancoDeDados.abrirConexao();
-        int idaluno = 0;
+        int idAluno = 0;
 
         try {
             String query = "SELECT aluno_id FROM aluno WHERE cpf = ?";
             PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-            preparedStatement.setString(1, palavra);
+            preparedStatement.setString(1, cpf);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            // Move the cursor to the first row
             if (resultSet.next()) {
-                // Retrieve the value of "aluno_id" from the current row
-                idaluno = resultSet.getInt("aluno_id");
+                idAluno = resultSet.getInt("aluno_id");
             }
 
         } catch (SQLException e) {
@@ -37,25 +48,29 @@ public class Utilitarios {
         } finally {
             bancoDeDados.fecharConexao();
         }
-        return idaluno;
+        return idAluno;
     }
 
-    public int getIDcurso(String palavra) {
+    /**
+     * Obtém o ID de um curso com base no nome do curso.
+     * 
+     * @param nomeCurso O nome do curso.
+     * @return O ID do curso ou 0 se não encontrado.
+     */
+    public int getIDcurso(String nomeCurso) {
         BancoDeDados bancoDeDados = new BancoDeDados();
         bancoDeDados.abrirConexao();
-        int cursoid = 0;
+        int cursoId = 0;
 
         try {
             String query = "SELECT curso_id FROM hml.curso WHERE nome_curso = ?";
             PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-            preparedStatement.setString(1, palavra);
+            preparedStatement.setString(1, nomeCurso);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            // Move the cursor to the first row
             if (resultSet.next()) {
-                // Retrieve the value of "aluno_id" from the current row
-                cursoid = resultSet.getInt("curso_id");
+                cursoId = resultSet.getInt("curso_id");
             }
 
         } catch (SQLException e) {
@@ -63,63 +78,57 @@ public class Utilitarios {
         } finally {
             bancoDeDados.fecharConexao();
         }
-        return cursoid;
+        return cursoId;
     }
 
-
-    public int verificaIDcurso(int idcurso) {
+    /**
+     * Verifica se um ID de curso é válido.
+     * 
+     * @param idCurso O ID do curso a ser verificado.
+     * @return true se o ID de curso é válido, false caso contrário.
+     */
+    public boolean verificaIDcurso(int idCurso) {
         BancoDeDados bancoDeDados = new BancoDeDados();
         bancoDeDados.abrirConexao();
-        int resul = 0;
 
         try {
-            String query = "SELECT 1 FROM curso WHERE curso_id = ?";
-            PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-            preparedStatement.setInt(1, idcurso);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                // Verifica se há linhas no resultado
-                if (resultSet.next()) {
-                    // O curso existe, resultSet.getInt(1) retornará 1
-                    resul = 1;
+            String query = "call VerificarCurso(?, ?)";
+            java.sql.CallableStatement callableStatement = bancoDeDados.getConnection().prepareCall(query);
+            callableStatement.setInt(1, idCurso);
+            callableStatement.registerOutParameter(2, Types.BOOLEAN);
+            callableStatement.execute();
 
-                } else {
-                    // O curso não existe
-                    System.out.println("Existe Curso: 0");
-                    resul = 0;
+            return callableStatement.getBoolean(2);
 
-                }
-            }
-
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         } finally {
             bancoDeDados.fecharConexao();
         }
-        return resul;
-
     }
 
-
-    public int verificaIDMaterias(int materia_id) {
+    /**
+     * Verifica se um ID de matéria é válido.
+     * 
+     * @param materiaId O ID da matéria a ser verificado.
+     * @return 1 se o ID de matéria é válido, 0 caso contrário.
+     */
+    public int verificaIDMaterias(int materiaId) {
         BancoDeDados bancoDeDados = new BancoDeDados();
         bancoDeDados.abrirConexao();
-        int resul = 0;
+        int resultado = 0;
 
         try {
             String query = "SELECT 1 FROM materias WHERE materia_id = ?";
             PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-            preparedStatement.setInt(1, materia_id);
+            preparedStatement.setInt(1, materiaId);
+
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                // Verifica se há linhas no resultado
                 if (resultSet.next()) {
-                    // O curso existe, resultSet.getInt(1) retornará 1
-                    resul = 1;
-
+                    resultado = 1;
                 } else {
-                    // O curso não existe
-                    System.out.println("Existe Materia: 0");
-                    resul = 0;
-
+                    resultado = 0;
                 }
             }
 
@@ -128,8 +137,33 @@ public class Utilitarios {
         } finally {
             bancoDeDados.fecharConexao();
         }
-        return resul;
-
+        return resultado;
     }
 
+    /**
+     * Verifica se um ID de aluno é válido.
+     * 
+     * @param idAluno O ID do aluno a ser verificado.
+     * @return true se o ID de aluno é válido, false caso contrário.
+     */
+    public boolean verificaIDaluno(int idAluno) {
+        BancoDeDados bancoDeDados = new BancoDeDados();
+        bancoDeDados.abrirConexao();
+
+        try {
+            String query = "{call VerificarAluno(?, ?)}";
+            java.sql.CallableStatement callableStatement = bancoDeDados.getConnection().prepareCall(query);
+            callableStatement.setInt(1, idAluno);
+            callableStatement.registerOutParameter(2, Types.BOOLEAN);
+            callableStatement.execute();
+
+            return callableStatement.getBoolean(2);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            bancoDeDados.fecharConexao();
+        }
+    }
 }

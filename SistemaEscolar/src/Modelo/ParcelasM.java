@@ -1,52 +1,72 @@
 package Modelo;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
-public class ParcelasM {
-    private int docId;
+/**
+ * A classe ParcelasM representa as parcelas associadas a um documento de pagamento, incluindo informações como
+ * ID do aluno, ano/mês da parcela e semestre da parcela.
+ * 
+ * Esta classe estende a classe DocPagamentoM para herdar as propriedades básicas de um documento de pagamento.
+ * 
+ * @author Iury Gabriel
+ * @version 1.0
+ */
+public class ParcelasM extends DocPagamentoM {
     private int alunoId;
-    private Date anomesParc;
-    private String semestreParc;
+    private String anomesParc;
 
-    public ParcelasM(int docId, int alunoId, Date anomesParc, String semestreParc) {
-        this.docId = docId;
+    /**
+     * Construtor para a classe ParcelasM.
+     * 
+     * @param docId         O ID do documento de pagamento.
+     * @param sitDoc        A situação do documento.
+     * @param valor         O valor do pagamento.
+     * @param emissao       A data de emissão do documento.
+     * @param vencimento    A data de vencimento do documento.
+     * @param alunoId       O ID do aluno associado à parcela.
+     * @param anomesParc    A data representando o ano/mês da parcela.
+     */
+    public ParcelasM(int docId, int sitDoc, BigDecimal valor, Date emissao, Date vencimento, int alunoId,
+            String anomesParc) {
+        super(docId, sitDoc, valor, emissao, vencimento);
         this.alunoId = alunoId;
         this.anomesParc = anomesParc;
-        this.semestreParc = semestreParc;
     }
 
-
-    public int getDocId() {
-        return docId;
-    }
-
-    public void setDocId(int docId) {
-        this.docId = docId;
-    }
-
+    /**
+     * Obtém o ID do aluno associado à parcela.
+     * 
+     * @return O ID do aluno associado à parcela.
+     */
     public int getAlunoId() {
         return alunoId;
     }
 
+    /**
+     * Define o ID do aluno associado à parcela.
+     * 
+     * @param alunoId O novo ID do aluno associado à parcela.
+     */
     public void setAlunoId(int alunoId) {
         this.alunoId = alunoId;
     }
 
-    public Date getAnomesParc() {
+    /**
+     * Obtém a data representando o ano/mês da parcela.
+     * 
+     * @return A data representando o ano/mês da parcela.
+     */
+    public String getAnomesParc() {
         return anomesParc;
     }
 
-    public void setAnomesParc(Date anomesParc) {
+    /**
+     * Define a data representando o ano/mês da parcela.
+     * 
+     * @param anomesParc A nova data representando o ano/mês da parcela.
+     */
+    public void setAnomesParc(String anomesParc) {
         this.anomesParc = anomesParc;
     }
-
-    public String getSemestreParc() {
-        return semestreParc;
-    }
-
-    public void setSemestreParc(String semestreParc) {
-        this.semestreParc = semestreParc;
-    }
-    
-
 }

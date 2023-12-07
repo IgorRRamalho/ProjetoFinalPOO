@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS parcelas (
     parcela_id int PRIMARY KEY,
     doc_id int,
     aluno_id int,
-    anomes_parc VARCHAR(5) DEFAULT NULL,
+    anomes_parc VARCHAR(6) DEFAULT NULL,
     FOREIGN KEY (aluno_id) REFERENCES aluno(aluno_id),
     FOREIGN KEY (doc_id) REFERENCES doc_pagamento(doc_id)
 );

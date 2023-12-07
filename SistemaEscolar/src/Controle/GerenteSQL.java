@@ -1,34 +1,43 @@
 package Controle;
 
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import Controle.GerenteGeral.Aluno;
-import Controle.GerenteGeral.Materias;
 import Modelo.AlunoM;
 import Modelo.CursoM;
-import Modelo.EnderecoM;
 import Modelo.GradeCursoM;
 import Modelo.MateriasM;
 
+/**
+ * Interface para operações SQL genéricas em modelos específicos.
+ *
+ * @param <Modelo> Tipo do modelo associado à operação SQL.
+ */
 public interface GerenteSQL<Modelo> {
-    void InserirSQL(Modelo objeto, int id_curso);
+    void InserirSQL(Modelo objeto);
 
     void RemoverSQL(int ID);
 
     ResultSet ConsultarSQL(int ID, String query);
 
-    Utilitarios util = new Utilitarios();
-    ConsultasC ConsultaC = new ConsultasC();
-
+    /**
+     * Implementação da interface GerenteSQL para operações relacionadas a Cursos.
+     */
     public class Curso implements GerenteSQL<CursoM> {
 
+        /**
+         * Insere um novo curso no banco de dados.
+         *
+         * @param curso Curso a ser inserido.
+         */
         @Override
-        public void InserirSQL(CursoM curso, int a) {
+        public void InserirSQL(CursoM curso) {
             BancoDeDados bancoDeDados = new BancoDeDados();
             bancoDeDados.abrirConexao();
 
@@ -40,7 +49,6 @@ public interface GerenteSQL<Modelo> {
                 preparedStatement.setString(1, curso.getNomeCurso());
                 preparedStatement.setString(2, curso.getTurno());
 
-                // Convert the date to the 'YYYY-MM-DD' format
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 Date date = dateFormat.parse(curso.getDataCriacao());
                 java.sql.Date sqlDate = new java.sql.Date(date.getTime());
@@ -63,6 +71,11 @@ public interface GerenteSQL<Modelo> {
             }
         }
 
+        /**
+         * Remove um curso do banco de dados.
+         *
+         * @param idCurso Identificador do curso a ser removido.
+         */
         @Override
         public void RemoverSQL(int idCurso) {
             BancoDeDados bancoDeDados = new BancoDeDados();
@@ -74,13 +87,23 @@ public interface GerenteSQL<Modelo> {
                 preparedStatement.setInt(1, idCurso);
 
                 preparedStatement.executeUpdate();
+                Utilitarios.limparTelaConsole();
             } catch (SQLException e) {
                 e.printStackTrace();
+                Utilitarios.limparTelaConsole();
+                System.out.println("*** Não é possível excluir o curso. Existem alunos vinculados a ele ***");
             } finally {
                 bancoDeDados.fecharConexao();
             }
         }
 
+        /**
+         * Consulta informações de um curso no banco de dados.
+         *
+         * @param idCurso Identificador do curso a ser consultado.
+         * @param query   Consulta SQL a ser executada.
+         * @return Resultado da consulta.
+         */
         @Override
         public ResultSet ConsultarSQL(int idCurso, String query) {
             BancoDeDados bancoDeDados = new BancoDeDados();
@@ -100,13 +123,20 @@ public interface GerenteSQL<Modelo> {
                 return resultado;
             }
         }
-
     }
 
+    /**
+     * Implementação da interface GerenteSQL para operações relacionadas a Matérias.
+     */
     public class Materias implements GerenteSQL<MateriasM> {
 
+        /**
+         * Insere uma nova matéria no banco de dados.
+         *
+         * @param materia Matéria a ser inserida.
+         */
         @Override
-        public void InserirSQL(MateriasM materia, int a) {
+        public void InserirSQL(MateriasM materia) {
             BancoDeDados bancoDeDados = new BancoDeDados();
             bancoDeDados.abrirConexao();
 
@@ -126,6 +156,11 @@ public interface GerenteSQL<Modelo> {
             }
         }
 
+        /**
+         * Remove uma matéria do banco de dados.
+         *
+         * @param materiaId Identificador da matéria a ser removida.
+         */
         @Override
         public void RemoverSQL(int materiaId) {
             BancoDeDados bancoDeDados = new BancoDeDados();
@@ -142,10 +177,17 @@ public interface GerenteSQL<Modelo> {
             }
         }
 
+        /**
+         * Consulta informações de matérias no banco de dados.
+         *
+         * @param ID    Identificador (não utilizado neste contexto).
+         * @param query Consulta SQL a ser executada.
+         * @return Resultado da consulta.
+         */
         @Override
         public ResultSet ConsultarSQL(int ID, String query) {
             BancoDeDados bancoDeDados = new BancoDeDados();
-            ResultSet resultado;
+            ResultSet resultado = null;
             bancoDeDados.abrirConexao();
 
             try {
@@ -160,123 +202,167 @@ public interface GerenteSQL<Modelo> {
             }
 
         }
+    }
 
-        public class Aluno implements GerenteSQL<AlunoM> {
+    /**
+     * Implementação da interface GerenteSQL para operações relacionadas a Alunos.
+     */
+    public class Aluno implements GerenteSQL<AlunoM> {
 
-            @Override
-            public void InserirSQL(AlunoM aluno, int idcurso) {
-                BancoDeDados bancoDeDados = new BancoDeDados();
-                bancoDeDados.abrirConexao();
+        /**
+         * Insere um novo aluno no banco de dados.
+         *
+         * @param aluno Aluno a ser inserido.
+         */
+        @Override
+        public void InserirSQL(AlunoM aluno) {
+            BancoDeDados bancoDeDados = new BancoDeDados();
+            bancoDeDados.abrirConexao();
+            System.out.println("ID do Curso: " + aluno.getIDcurso());
 
-                try {
-                    String query = " CALL hml.cadastrar_aluno(? , ? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? , ?, @aluno_id_out) ";
+            try {
+                String query = "{ CALL hml.cadastrar_aluno(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) }";
 
-                    PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-                    preparedStatement.setString(1, aluno.getNome());
-                    preparedStatement.setString(2, aluno.getNomePai());
-                    preparedStatement.setString(3, aluno.getNomeMae());
-                    preparedStatement.setString(4, aluno.getRg());
-                    preparedStatement.setString(5, aluno.getCpf());
+                try (CallableStatement callableStatement = bancoDeDados.getConnection().prepareCall(query)) {
+                    callableStatement.setString(1, aluno.getNome());
+                    callableStatement.setString(2, aluno.getNomePai());
+                    callableStatement.setString(3, aluno.getNomeMae());
+                    callableStatement.setString(4, aluno.getRg());
+                    callableStatement.setString(5, aluno.getCpf());
 
-                    // Convert the date to the 'YYYY-MM-DD' format
                     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                     Date date = dateFormat.parse(aluno.getDataNasc());
                     java.sql.Date sqlDate = new java.sql.Date(date.getTime());
 
-                    preparedStatement.setDate(6, sqlDate);
-                    preparedStatement.setString(7, aluno.getEmail());
-                    preparedStatement.setString(8, String.valueOf(aluno.getSexo()));
-                    preparedStatement.setString(9, aluno.getCelular());
+                    callableStatement.setDate(6, sqlDate);
+                    callableStatement.setString(7, aluno.getEmail());
+                    callableStatement.setString(8, String.valueOf(aluno.getSexo()));
+                    callableStatement.setString(9, aluno.getCelular());
 
-                    preparedStatement.setString(10, aluno.getRua());
-                    preparedStatement.setString(11, aluno.getBairro());
-                    preparedStatement.setInt(12, aluno.getNumero());
-                    preparedStatement.setString(13, aluno.getComplemento());
-                    preparedStatement.setString(14, aluno.getCep());
-                    preparedStatement.setString(15, aluno.getCidade());
-                    preparedStatement.setString(16, aluno.getEstado());
-                    preparedStatement.setInt(17, idcurso);
-                    preparedStatement.executeUpdate();
+                    callableStatement.setString(10, aluno.getRua());
+                    callableStatement.setString(11, aluno.getBairro());
+                    callableStatement.setInt(12, aluno.getNumero());
+                    callableStatement.setString(13, aluno.getComplemento());
+                    callableStatement.setString(14, aluno.getCep());
+                    callableStatement.setString(15, aluno.getCidade());
+                    callableStatement.setString(16, aluno.getEstado());
+                    callableStatement.setInt(17, aluno.getIDcurso());
 
-                } catch (SQLException | ParseException e) {
-                    e.printStackTrace();
-                } finally {
-                    bancoDeDados.fecharConexao();
-                    util.limparTelaConsole();
-                }
-            }
+                    callableStatement.registerOutParameter(18, Types.INTEGER);
 
-            @Override
-            public void RemoverSQL(int idaluno) {
-                BancoDeDados bancoDeDados = new BancoDeDados();
-                try {
-                    String query = "CALL ExcluirAluno(?);";
-                    PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-                    preparedStatement.setInt(1, idaluno);
+                    callableStatement.execute();
 
-                    preparedStatement.executeUpdate();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public ResultSet ConsultarSQL(int ID, String query) {
-                BancoDeDados bancoDeDados = new BancoDeDados();
-                ResultSet resultado = null;
-                bancoDeDados.abrirConexao();
-
-                try {
-                    PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-                    preparedStatement.setInt(1, ID);
-                    resultado = preparedStatement.executeQuery();
-                    return resultado;
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                } finally {
-                    return resultado;
+                    int alunoIdOut = callableStatement.getInt(18);
+                    System.out.println("Aluno ID: " + alunoIdOut);
                 }
 
+            } catch (SQLException | ParseException e) {
+                e.printStackTrace();
+            } finally {
+                bancoDeDados.fecharConexao();
+                Utilitarios.limparTelaConsole();
             }
-
         }
 
-        public class GradeCurso implements GerenteSQL<GradeCursoM> {
+        /**
+         * Remove um aluno do banco de dados.
+         *
+         * @param idAluno Identificador do aluno a ser removido.
+         */
+        @Override
+        public void RemoverSQL(int idAluno) {
+            BancoDeDados bancoDeDados = new BancoDeDados();
+            try {
+                String query = "CALL ExcluirAluno(?);";
+                PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
+                preparedStatement.setInt(1, idAluno);
 
-            @Override
-            public void InserirSQL(GradeCursoM grade, int a) {
-                BancoDeDados bancoDeDados = new BancoDeDados();
-                bancoDeDados.abrirConexao();
-
-                try {
-                    String query = "INSERT INTO grade_curso (curso_id, materia_id)"
-                            + " VALUES(?, ?);";
-
-                    PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
-                    preparedStatement.setInt(1, grade.getCursoId());
-                    preparedStatement.setInt(2, grade.getMateriaId());
-
-                    preparedStatement.executeUpdate();
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                } finally {
-                    bancoDeDados.fecharConexao();
-                }
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
+        }
 
-            @Override
-            public void RemoverSQL(int ID) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'RemoverSQL'");
-            }
+        /**
+         * Consulta informações de alunos no banco de dados.
+         *
+         * @param ID    Identificador do aluno a ser consultado.
+         * @param query Consulta SQL a ser executada.
+         * @return Resultado da consulta.
+         */
+        @Override
+        public ResultSet ConsultarSQL(int ID, String query) {
+            BancoDeDados bancoDeDados = new BancoDeDados();
+            ResultSet resultado = null;
+            bancoDeDados.abrirConexao();
 
-            @Override
-            public ResultSet ConsultarSQL(int ID, String query) {
-                // TODO Auto-generated method stub
-                throw new UnsupportedOperationException("Unimplemented method 'ConsultarSQL'");
+            try {
+                PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
+                preparedStatement.setInt(1, ID);
+                resultado = preparedStatement.executeQuery();
+                return resultado;
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                return resultado;
             }
+        }
+    }
+
+    /**
+     * Implementação adicional para operações relacionadas a Grade de Curso.
+     */
+    public class GradeCurso implements GerenteSQL<GradeCursoM> {
+
+        /**
+         * Insere uma nova entrada na grade de curso no banco de dados.
+         *
+         * @param grade Entrada de grade de curso a ser inserida.
+         */
+        @Override
+        public void InserirSQL(GradeCursoM grade) {
+            BancoDeDados bancoDeDados = new BancoDeDados();
+            bancoDeDados.abrirConexao();
+
+            try {
+                String query = "INSERT INTO grade_curso (curso_id, materia_id)"
+                        + " VALUES(?, ?);";
+
+                PreparedStatement preparedStatement = bancoDeDados.getConnection().prepareStatement(query);
+                preparedStatement.setInt(1, grade.getCursoId());
+                preparedStatement.setInt(2, grade.getMateriaId());
+
+                preparedStatement.executeUpdate();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } finally {
+                bancoDeDados.fecharConexao();
+
+            }
+        }
+
+        /**
+         * Remover uma entrada na grade de curso do banco de dados (não implementado).
+         *
+         * @param ID Identificador da entrada na grade de curso a ser removida.
+         */
+        @Override
+        public void RemoverSQL(int ID) {
+            throw new UnsupportedOperationException("Unimplemented method 'RemoverSQL'");
+        }
+
+        /**
+         * Consultar informações na grade de curso do banco de dados (não implementado).
+         *
+         * @param ID    Identificador da entrada na grade de curso a ser consultada.
+         * @param query Consulta SQL a ser executada.
+         * @return Resultado da consulta.
+         */
+        @Override
+        public ResultSet ConsultarSQL(int ID, String query) {
+            throw new UnsupportedOperationException("Unimplemented method 'ConsultarSQL'");
         }
     }
 }

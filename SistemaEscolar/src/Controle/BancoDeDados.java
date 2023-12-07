@@ -7,50 +7,41 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class BancoDeDados {
-    // Objeto de Conexão com BD
-    public Connection conect;
-    // Objeto de Consulta SQL
-    public Statement state;
-    // Objeto com dados SQL
-    private ResultSet result;
-
+    private Connection conexao;
+    private Statement statement;
     public void abrirConexao() {
         try {
             // Carregue o driver JDBC do MySQL
             Class.forName("com.mysql.cj.jdbc.Driver");
             // Estabeleça a conexão com o MySQL
-            conect = DriverManager.getConnection(
+            conexao = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/hml", "root", "*Igor1010*");
-            System.out.println("Conectado ao MySQL.");
-        } catch (Exception e) {
-            System.out.println("Falha ao tentar a conexão");
-            e.printStackTrace();
-        }
 
-        try {
-            state = conect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        } catch (Exception e) {
-            System.out.println("Falha no Cursor de Execução");
+            statement = conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        } catch (ClassNotFoundException | SQLException e) {
+            System.out.println("Falha ao tentar a conexão");
             e.printStackTrace();
         }
     }
 
     public Connection getConnection() {
-        return conect;
+        return conexao;
     }
 
     public Statement getStatement() {
-        return state;
+        return statement;
     }
 
     public void fecharConexao() {
-        if (conect != null) {
-            try {
-                conect.close();
-                System.out.println("Conexão MySQL FECHADA");
-            } catch (SQLException erro) {
-                erro.printStackTrace();
+        try {
+            if (statement != null) {
+                statement.close();
             }
+            if (conexao != null) {
+                conexao.close();
+            }
+        } catch (SQLException erro) {
+            erro.printStackTrace();
         }
     }
 }
